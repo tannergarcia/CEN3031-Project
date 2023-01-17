@@ -10,3 +10,4 @@ Provides an easy to use marketplace for the trade and resale of UF Football Tick
 
 ### Backend
 Tanner Garcia
+Dominik Kapuscinski
