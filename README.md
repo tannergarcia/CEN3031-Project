@@ -8,7 +8,9 @@ Through the use of image steganography, our website will allow users to hide tex
 
 ### Frontend
 Aszti Chadzynski
+
 Eric
 ### Backend
 Tanner Garcia
+
 Dominik Kapuscinski
