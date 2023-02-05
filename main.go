@@ -56,19 +56,25 @@ func main() {
 		}
 		t, _ := template.ParseFiles("templates/success.html")
 
-		if _, err := os.Stat("./userImages/" + user.UserID); !os.IsNotExist(err) {
-			fmt.Println("Existing User, user file exists")
-		} else {
-			os.MkdirAll("./userImages/"+user.UserID, os.ModePerm)
-			fmt.Println("New User, Created user Images file")
-		}
+		store.Save
 
 		t.Execute(res, user)
 	})
 
 	p.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
-		gothic.BeginAuthHandler(res, req)
+	  if gothUser, err := gothic.CompleteUserAuth(res, req); err == mil {
+		t, _ := template.ParseFiles("templates/success.html")
+		t.Execute(res, gothUser)
+	  } else {
+	    gothic.BeginAuthHandler(res, req)
+	  }
 	})
+
+	p.Get("/logout/{provider}", func(res http.ResponseWriter, req *http.Request)) {
+		gothic.logout(res,req)
+		res.Header().set("Location", "/")
+		res.WriteHeader(http.StatusTemporaryRedirect)
+	}
 
 	p.Get("/", func(res http.ResponseWriter, req *http.Request) {
 		t, _ := template.ParseFiles("templates/index.html")
