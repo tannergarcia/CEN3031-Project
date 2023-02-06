@@ -1,0 +1,7 @@
+.card-class{
+    width: 280px!important;
+    height: 300px!important;
+    min-width: unset!important;
+    min-height: unset!important;
+    font-size: 30px !important;
+}

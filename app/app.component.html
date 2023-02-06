@@ -1,0 +1,76 @@
+<style>
+
+
+  @import url('https://fonts.googleapis.com/css2?family=Albert+Sans&family=Besley:ital@1&display=swap');
+
+
+
+.clicker {
+  position: absolute;
+  top: 0;
+  left: 1;
+  right: 0;
+  
+
+}
+
+.webname {
+  position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  font-size: 30px;
+  color: rgb(255, 255, 255);
+
+}
+
+.click-class{
+    width: 280px!important;
+    height: 40px!important;
+    min-width: unset!important;
+    min-height: unset!important;
+    font-size: 30px !important;
+    font-family: 'Albert Sans', sans-serif;
+    color:rgb(110, 52, 52);
+    background-color: rgb(163, 162, 158);
+}
+
+
+
+</style>
+
+
+
+<!-- Logo -->
+<p style="text-align:center;margin-top: -0.4em;"><img src='assets/Background.jpg' ng-click = goHome alt="Logo"></p>
+
+<div class="webname">
+  <p style="margin-left: 5.5em; margin-top: 5.6em"><span><h1><span class="light">PHOTO</span>BOMB</h1>
+
+
+<div class="clicker">
+  <div *ngIf="displayCard">
+    <app-page></app-page>
+  </div>
+
+  <p style="text-align:center;margin-top: 2.8em; margin-right: 5.9em"><button mat-raised-button>
+  <a mat-button
+  style="text-decoration: none; color: white"
+  mat-raised-button-GRAY
+  class="click-class"
+  color = "white"
+  (click)="getCard()">LOGIN</a></button></p>
+  </div>
+
+<p style="text-align:center;margin-top: 16em; margin-right: -35em"><button mat-raised-button>
+  <a mat-button
+  style="text-decoration: none"
+[routerLink]="['home']"
+routerLinkActive="active"
+(click)="goHome()">HOME</a></button>
+  
+
+
+
+
+
