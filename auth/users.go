@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/tannergarcia/PhotoBomb/database"
@@ -200,7 +201,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	// find session token in DB
 	var foundUser models.User
-	database.UserInstance.First(&foundUser, "session = ?", c.Value)
+	database.UserInstance.First(&foundUser, "session = ?", c.Value) // TODO: test if user doesn't exist
 
 	// remove session from DB
 	database.UserInstance.Model(&foundUser).Update("Session", "")
@@ -214,4 +215,23 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		Expires: time.Now(),
 	})
 	fmt.Println("User logged out")
+}
+
+func GetUser(r *http.Request) (uint64, error) {
+	cooky, err := r.Cookie("session_token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			return 0, errors.New("no cookie")
+		}
+		return 0, errors.New("bad request")
+	}
+
+	var foundUser models.User
+	
+	if err := database.UserInstance.First(&foundUser, "session = ?", cooky.Value).Error; err != nil {
+		// user id doesn't exist
+		return 0, errors.New("userID doesn't exist")
+	} 
+
+	return foundUser.ID, nil
 }
