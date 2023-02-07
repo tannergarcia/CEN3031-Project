@@ -20,8 +20,8 @@ type Credentials struct {
 
 func Signup(w http.ResponseWriter, r *http.Request) {
 	// Parse and decode the request body into a new `Credentials` instance
-	creds := &Credentials{}
-	err := json.NewDecoder(r.Body).Decode(creds)
+	creds := Credentials{}
+	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
 		// If there is something wrong with the request body, return a 400 status
 		w.WriteHeader(http.StatusBadRequest)
@@ -205,6 +205,8 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	// remove session from DB
 	database.UserInstance.Model(&foundUser).Update("Session", "")
+	database.UserInstance.Model(&foundUser).Update("SeshExp", "")
+
 
 	// We need to let the client know that the cookie is expired
 	// In the response, we set the session token to an empty
