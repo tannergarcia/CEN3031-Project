@@ -27,6 +27,17 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	// check for dupe username
+	var foundUser models.User
+	if err := database.UserInstance.Where("username = ?", creds.Username).First(&foundUser).Error; err == nil {
+		// username already exists
+		w.WriteHeader(http.StatusConflict)
+		return
+	}
+
+
+
 	// Salt and hash the password using the bcrypt algorithm
 	// The second argument is the cost of hashing, which we arbitrarily set as 8 (this value can be more or less, depending on the computing power you wish to utilize)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(creds.Password), 8)
