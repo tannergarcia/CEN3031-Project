@@ -28,10 +28,15 @@ As a **user**, I want to see a homepage, so that I know what the website does.
 ## Sprint Issues
 
 -~~Sending images to the backend~~ [Issue](https://github.com/tannergarcia/PhotoBomb/issues/5)
+
 -~~Retrieving images from backend~~ [Issue](https://github.com/tannergarcia/PhotoBomb/issues/5)
+
 -~~Deleting images~~ [Issue](https://github.com/tannergarcia/PhotoBomb/issues/5)
+
 -~~Creating signup/login within backend~~ [Issue](https://github.com/tannergarcia/PhotoBomb/issues/1)
+
 -~~User login page mockup~~ [Issue](https://github.com/tannergarcia/PhotoBomb/issues/3)
+
 -Logged-in dashboard mockup [Issue](https://github.com/tannergarcia/PhotoBomb/issues/2)
 
 ## Uncompleted Issues
