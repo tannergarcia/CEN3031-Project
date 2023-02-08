@@ -45,3 +45,8 @@ As a **user**, I want to see a homepage, so that I know what the website does.
   - Still need to implement REST requests within the frontend
 - A basic homepage with a login option is provided, but no information about the website is available
 - Unable to create dashboard for logged-in users, issue pushed to next sprint
+
+##Reasons For Uncompleted Issues
+
+-These issues were not completed in this sprint due to not having certain features already existing to build off of. For example, we did not create a dashboard because we have not yet implemented the user logging in yet.
+-Other issues we did not address, we needed more time to communicate with one another to integrate our parts and build
