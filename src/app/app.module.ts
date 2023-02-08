@@ -12,13 +12,16 @@ import { ImagebtnsComponent } from './imagebtns/imagebtns.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { TextboxComponent } from './textbox/textbox.component';
 import {MatInputModule} from '@angular/material/input';
+import { HttpClientModule } from '@angular/common/http';
+import { UploadComponent } from './upload/upload.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ToolbarComponent,
     ImagebtnsComponent,
-    TextboxComponent
+    TextboxComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule,
@@ -28,8 +31,11 @@ import {MatInputModule} from '@angular/material/input';
     MatToolbarModule,
     MatDividerModule,
     MatInputModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+
+}
