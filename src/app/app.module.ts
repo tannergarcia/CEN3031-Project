@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
@@ -14,6 +16,11 @@ import { TextboxComponent } from './textbox/textbox.component';
 import {MatInputModule} from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
 import { UploadComponent } from './upload/upload.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { DecodeComponent } from './decode/decode.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EncodeComponent } from './encode/encode.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +28,10 @@ import { UploadComponent } from './upload/upload.component';
     ToolbarComponent,
     ImagebtnsComponent,
     TextboxComponent,
-    UploadComponent
+    UploadComponent,
+    DecodeComponent,
+    EncodeComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -32,9 +42,14 @@ import { UploadComponent } from './upload/upload.component';
     MatDividerModule,
     MatInputModule,
     HttpClientModule,
+    FlexLayoutModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DecodeComponent]
 })
 export class AppModule { 
 

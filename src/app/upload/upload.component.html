@@ -1,20 +1,28 @@
 
 <input type="file" class="file-input"
-       (change)="onFileSelected($event)" #fileUpload>
+       (change)="onFileSelected($event)" #fileUpload
+       (change)="hide = false">
 
 
+<div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="30">
 
-<div class="file-upload">
-
-   
-
+  <div fxFlex=""></div>
+  <div class="file-upload">
     <button mat-raised-button color="primary" class="upload-btn"
       (click)="fileUpload.click()">
-      Choose File      
+      Choose Image      
     </button>
-    {{fileName || "No file uploaded yet."}}
-</div>
+    {{fileName || "No image uploaded yet."}}
+  </div>
+  <div fxLayout="row" fxLayoutGap="20">
+    <button mat-raised-button (click)="onUpload();" [hidden]="hide">
+      ✎ Encode
+    </button>
 
-<button mat-raised-button (click)="onUpload()">
-    Upload
-</button>
+    <button mat-raised-button color="accent" (click)="openDecode(); onUpload()" [hidden]="hide">
+      🔓︎ Decode
+    </button>
+  </div>
+  <div fxFlex=""></div>
+  
+</div>
