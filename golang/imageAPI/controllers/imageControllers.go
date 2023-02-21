@@ -10,10 +10,12 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func ImageCreate(w http.ResponseWriter, r *http.Request) {
 	var errNew string
+	fmt.Println("Create")
 	//Parse form data
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("uploadfile")
@@ -21,6 +23,7 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) {
 
 	//Only allow images
 	filetype := filepath.Ext(handler.Filename)
+	filetype = strings.ToLower(filetype)
 	if filetype != ".jpeg" && filetype != ".png" && filetype != ".jpg" {
 		errNew = "The provided file format is not allowed. Please upload a JPEG,JPG or PNG image"
 		//http_status = http.StatusBadRequest
