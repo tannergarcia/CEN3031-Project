@@ -1,4 +1,4 @@
-package entities
+package models
 
 type Image struct {
 	ID        uint   `json:"id"`

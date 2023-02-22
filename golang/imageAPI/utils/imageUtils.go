@@ -28,7 +28,7 @@ func AddImage(token string, filetype string, file *multipart.File, w http.Respon
 	image.Token = token
 	image.Timestamp = timestamp
 	image.Extention = filetype
-	database.Instance.Create(&image)
+	database.ImageInstance.Create(&image)
 	json.NewEncoder(w).Encode(image)
 }
 

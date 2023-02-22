@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	"imageAPI/auth"
+
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
@@ -13,7 +15,6 @@ import (
 const PORT = "8080"
 
 func main() {
-
 	// Initialize Database
 	database.Connect()
 	database.Migrate()
@@ -30,6 +31,7 @@ func main() {
 	//Cors allow all orgins
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
+		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 	})
 	handler := c.Handler(r)
@@ -38,6 +40,11 @@ func main() {
 
 }
 func RegisterImageRoutes(r *mux.Router) {
+	//User login
+	r.HandleFunc("/signin", auth.Signin).Methods("POST")
+	r.HandleFunc("/signup", auth.Signup).Methods("POST")
+	r.HandleFunc("/logout", auth.Logout).Methods("POST")
+
 	//Image upload
 	r.HandleFunc("/upload/encode", controllers.ImageCreate).Methods("POST")
 	r.HandleFunc("/upload/decode", controllers.ImageDecode).Methods("POST") //Decode new

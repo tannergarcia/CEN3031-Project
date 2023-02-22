@@ -10,24 +10,37 @@ import (
 
 const DB_USERNAME = "root"
 const DB_PASSWORD = ""
-const DB_NAME = "images"
+const DB_NAME_I = "images"
+const DB_NAME_U = "users"
 const DB_HOST = "127.0.0.1"
 const DB_PORT = "3306"
 
-var Instance *gorm.DB
+var ImageInstance *gorm.DB
+var UserInstance *gorm.DB
 var err error
 
 func Connect() {
-	dsn := DB_USERNAME + ":" + DB_PASSWORD + "@tcp" + "(" + DB_HOST + ":" + DB_PORT + ")/" + DB_NAME + "?" + "parseTime=true&loc=Local"
-	Instance, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	//Image DB
+	dsn := DB_USERNAME + ":" + DB_PASSWORD + "@tcp" + "(" + DB_HOST + ":" + DB_PORT + ")/" + DB_NAME_I + "?" + "parseTime=true&loc=Local"
+	ImageInstance, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 		panic("Cannot connect to DB")
 	}
-	log.Println("Connected to Database...")
+	log.Println("Connected to Image Database...")
+
+	//User DB
+	dsnU := DB_USERNAME + ":" + DB_PASSWORD + "@tcp" + "(" + DB_HOST + ":" + DB_PORT + ")/" + DB_NAME_U + "?" + "parseTime=true&loc=Local"
+	UserInstance, err = gorm.Open(mysql.Open(dsnU), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+		panic("Cannot connect to DB")
+	}
+	log.Println("Connected to User Database...")
 }
 
 func Migrate() {
-	Instance.AutoMigrate(&entities.Image{})
+	ImageInstance.AutoMigrate(&entities.Image{})
+	UserInstance.AutoMigrate(&entities.User{})
 	log.Println("Database Migration Completed...")
 }

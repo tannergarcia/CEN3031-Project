@@ -2,14 +2,16 @@ package auth
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
-	"errors"
+
+	"imageAPI/database"
+	"imageAPI/models"
 
 	"github.com/google/uuid"
-	"github.com/tannergarcia/PhotoBomb/database"
-	"github.com/tannergarcia/PhotoBomb/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -27,16 +29,14 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 	// check for dupe username
 	var foundUser models.User
 	if err := database.UserInstance.Where("username = ?", creds.Username).First(&foundUser).Error; err == nil {
 		// username already exists
+		fmt.Println("User Exists")
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
-
-
 
 	// Salt and hash the password using the bcrypt algorithm
 	// The second argument is the cost of hashing, which we arbitrarily set as 8 (this value can be more or less, depending on the computing power you wish to utilize)
@@ -97,6 +97,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	if err = bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(creds.Password)); err != nil {
 		// wrong password
 		w.WriteHeader(http.StatusUnauthorized)
+		return
 	}
 
 	// Create a new random session token
@@ -218,7 +219,6 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	database.UserInstance.Model(&foundUser).Update("Session", "")
 	database.UserInstance.Model(&foundUser).Update("SeshExp", "")
 
-
 	// We need to let the client know that the cookie is expired
 	// In the response, we set the session token to an empty
 	// value and set its expiry as the current time
@@ -230,21 +230,23 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("User logged out")
 }
 
-func GetUser(r *http.Request) (uint64, error) {
+func GetUser(r *http.Request) (string, error) {
 	cooky, err := r.Cookie("session_token")
 	if err != nil {
+		fmt.Println("Error")
 		if err == http.ErrNoCookie {
-			return 0, errors.New("no cookie")
+			return "-1", errors.New("no cookie")
 		}
-		return 0, errors.New("bad request")
+		return "-1", errors.New("bad request")
 	}
-
 	var foundUser models.User
-	
+
 	if err := database.UserInstance.First(&foundUser, "session = ?", cooky.Value).Error; err != nil {
 		// user id doesn't exist
-		return 0, errors.New("userID doesn't exist")
-	} 
+		return "-1", errors.New("userID doesn't exist")
+	}
+	//Convert to string
+	userIDs := strconv.FormatUint(foundUser.ID, 10)
 
-	return foundUser.ID, nil
+	return userIDs, nil
 }
