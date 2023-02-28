@@ -1,7 +1,7 @@
 package database
 
 import (
-	entities "imageAPI/models"
+	entities "github.com/tannergarcia/PhotoBomb/pkg/models"
 	"log"
 
 	"gorm.io/driver/mysql"

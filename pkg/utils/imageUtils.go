@@ -3,8 +3,8 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
-	"imageAPI/database"
-	entities "imageAPI/models"
+	"github.com/tannergarcia/PhotoBomb/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/pkg/models"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -24,7 +24,7 @@ func AddImage(token string, filetype string, file *multipart.File, w http.Respon
 
 	//Image object to DB
 	w.Header().Set("Content-Type", "application/json")
-	var image entities.Image
+	var image models.Image
 	image.Token = token
 	image.Timestamp = timestamp
 	image.Extention = filetype
