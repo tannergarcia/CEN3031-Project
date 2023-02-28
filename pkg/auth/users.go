@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"imageAPI/database"
-	"imageAPI/models"
+	"github.com/tannergarcia/PhotoBomb/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/pkg/models"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"

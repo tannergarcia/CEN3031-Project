@@ -3,10 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"imageAPI/auth"
-	"imageAPI/database"
-	entities "imageAPI/models"
-	"imageAPI/utils"
+	"github.com/tannergarcia/PhotoBomb/pkg/auth"
+	"github.com/tannergarcia/PhotoBomb/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/pkg/models"
+	"github.com/tannergarcia/PhotoBomb/pkg/utils"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -93,7 +93,7 @@ func GetImageById(w http.ResponseWriter, r *http.Request) {
 	//Parse request
 	timestamp := r.URL.Query().Get("timestamp")
 
-	var image entities.Image
+	var image models.Image
 	image.Token = userID
 	image.Timestamp = timestamp
 
@@ -125,7 +125,7 @@ func ExistingDecode(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Get image")
 
 	//Parse request
-	var image entities.Image
+	var image models.Image
 	err2 := json.NewDecoder(r.Body).Decode(&image)
 	if err2 != nil {
 		http.Error(w, err2.Error(), http.StatusBadRequest)
@@ -165,11 +165,11 @@ func GetAllImages(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Get all images")
 	//Parse request
 
-	var image entities.Image
+	var image models.Image
 	image.Token = userID
 
 	//Get from db
-	var images []entities.Image
+	var images []models.Image
 	database.ImageInstance.Where("token = ?", image.Token).Find(&images)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -187,7 +187,7 @@ func DeleteImageById(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Delete image")
 	//Parse request
-	var image entities.Image
+	var image models.Image
 	err2 := json.NewDecoder(r.Body).Decode(&image)
 	if err2 != nil {
 		http.Error(w, err2.Error(), http.StatusBadRequest)

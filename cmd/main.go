@@ -1,12 +1,12 @@
 package main
 
 import (
-	"imageAPI/controllers"
-	"imageAPI/database"
+	"github.com/tannergarcia/PhotoBomb/pkg/controllers"
+	"github.com/tannergarcia/PhotoBomb/pkg/database"
 	"log"
 	"net/http"
 
-	"imageAPI/auth"
+	"github.com/tannergarcia/PhotoBomb/pkg/auth"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
