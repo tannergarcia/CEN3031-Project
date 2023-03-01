@@ -3,6 +3,7 @@ User Stories
 -As a user, I want to log into my account because I want to view my personalized dashboard
 -
 
+## API Documentation
 ------------------------------------------------------------------------------------------
 
 #### User authentication
@@ -85,15 +86,241 @@ User Stories
     "Expires": "[Expiration time]"
 }
 ```
-
 #### Responses
 **Code** : `200 OK`
 
-  -User logged out
+  -User signed out
+ 
+**Code** : `401 UNAUTHORIZED`
+  
+  -Cookie not set or bad token
+
+</details>
+------------------------------------------------------------------------------------------
+
+#### Image API
+<details>
+ <summary><code>POST</code> <code><b>/upload/encode</b></code> Upload image with text encoding</summary>
+
+#### Parameters
+**Cookie authentication required**
+
+```json
+{
+    "Name":  "session_token",
+    "Value": "[unique session token]"
+    "Expires": "[Expiration time]"
+}
+```
+
+**Multipart form**
+ 
+form enctype="multipart/form-data"
+| input type  | Name        |  Value      |
+| ----------- | ----------- | ----------- |
+| file        | uploadfile  | -           |
+| Text        | imagetext   | -           |
+| submit      | -           | upload      |
+#### Responses
+**Code** : `200 OK`
+
+  -Upload and encode success
+ 
+**Code** : `400 BAD REQUEST`
+  
+  -Wrong file type. Only .jpeg .png .jpg allowed
 
 **Code** : `401 UNAUTHORIZED`
   
   -Cookie not set or bad token
+
+</details>
+
+<details>
+ <summary><code>POST</code> <code><b>/upload/decode</b></code> Upload image and get decoded text</summary>
+
+#### Parameters
+ 
+\*No authentication required
+ 
+**Multipart form**
+ 
+form enctype="multipart/form-data"
+| input type  | Name        |  Value      |
+| ----------- | ----------- | ----------- |
+| file        | uploadfile  | -           |
+| Text        | imagetext   | -           |
+| submit      | -           | upload      |
+#### Responses
+**Code** : `200 OK`
+```json
+{
+    "imageCode":  "[decoded image text]",
+}
+```
+  -Upload and encode success
+ 
+**Code** : `400 BAD REQUEST`
+  
+  -Wrong file type. Only .jpeg .png .jpg allowed
+
+</details>
+
+<details>
+ <summary><code>GET</code> <code><b>/decode</b></code> Decode existing image</summary>
+
+#### Parameters
+**Cookie authentication required**
+
+```json
+{
+    "Name":  "session_token",
+    "Value": "[unique session token]"
+    "Expires": "[Expiration time]"
+}
+```
+**Image timestamp**
+
+```json
+{
+    "timestamp":  "[image timestamp]",
+}
+```
+ 
+#### Responses
+**Code** : `200 OK`
+```json
+{
+    "imageCode":  "[decoded image text]",
+}
+```
+  -Upload and encode success
+ 
+**Code** : `400 BAD REQUEST`
+  
+  -Cannot find image in database
+ 
+**Code** : `401 UNAUTHORIZED`
+  
+  -Cookie not set or bad token
+ 
+**Code** : `500 INTERNAL SERVER ERROR`
+  
+  -Cannot find image in file system
+
+</details>
+
+<details>
+ <summary><code>GET</code> <code><b>/download/?timestamp={timestamp}</b></code> Download image</summary>
+
+#### Parameters
+**Cookie authentication required**
+
+```json
+{
+    "Name":  "session_token",
+    "Value": "[unique session token]"
+    "Expires": "[Expiration time]"
+}
+```
+ 
+#### Responses
+**Code** : `200 OK`
+
+ Content-Type="application/octet-stream"
+ 
+  -Send image
+ 
+**Code** : `400 BAD REQUEST`
+  
+  -Cannot find image in database
+ 
+**Code** : `401 UNAUTHORIZED`
+  
+  -Cookie not set or bad token
+ 
+**Code** : `500 INTERNAL SERVER ERROR`
+  
+  -Cannot find image in file system
+
+</details>
+
+<details>
+ <summary><code>GET</code> <code><b>/download/list/?timestamp={timestamp}</b></code> List all images for a user</summary>
+
+#### Parameters
+**Cookie authentication required**
+
+```json
+{
+    "Name":  "session_token",
+    "Value": "[unique session token]"
+    "Expires": "[Expiration time]"
+}
+```
+ 
+#### Responses
+**Code** : `200 OK`
+
+  -Lists all images 
+```json
+[{
+    "id":  "[image id]",
+    "token": "[user token]",
+    "timestamp": "[image timestamp]",
+    "extention": "[image extention]"
+}]
+```
+
+ 
+**Code** : `400 BAD REQUEST`
+  
+  -Cannot find image in database
+ 
+**Code** : `401 UNAUTHORIZED`
+  
+  -Cookie not set or bad token
+
+</details>
+
+<details>
+ <summary><code>GET</code> <code><b>/delete</b></code> Delete an image</summary>
+
+#### Parameters
+**Cookie authentication required**
+
+```json
+{
+    "Name":  "session_token",
+    "Value": "[unique session token]"
+    "Expires": "[Expiration time]"
+}
+```
+ 
+**Image timestamp**
+
+```json
+{
+    "timestamp":  "[image timestamp]",
+}
+```
+ 
+#### Responses
+**Code** : `200 OK`
+ 
+  -Image deleted
+ 
+**Code** : `404 NOT FOUND`
+  
+  -Cannot find image in database
+ 
+**Code** : `401 UNAUTHORIZED`
+  
+  -Cookie not set or bad token
+ 
+**Code** : `500 INTERNAL SERVER ERROR`
+  
+  -Cannot find image in file system
 
 </details>
 ------------------------------------------------------------------------------------------
