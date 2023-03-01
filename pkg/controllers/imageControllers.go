@@ -108,7 +108,7 @@ func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image 
 	fmt.Println("Found user: " + userID)
 
 	//Parse request
-	timestamp := r.URL.Query().Get("timestamp")
+	timestamp := r.URL.Query().Get("timestamp") // FIXME: getimagebyid uses rawquery, deleteimagebyid uses json
 
 	var image models.Image
 	image.Token = userID
@@ -116,7 +116,7 @@ func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image 
 
 	//Get from db
 	if err := database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image).Error; err != nil { //If image does not exist
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest) // TODO: go through all http codes to make sure they are right. This one is different than the delete not found, which returns 404
 		return
 	}
 	filename := image.Token + image.Timestamp + image.Extension
@@ -154,15 +154,15 @@ func ExistingDecode(w http.ResponseWriter, r *http.Request) { // decodes an imag
 	image.Token = userID
 
 	//Get from db
-	database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image)
-	if image.ID == 0 { //If image does not exist
-		w.WriteHeader(http.StatusBadRequest)
+	if err := database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image).Error; err != nil {
+		w.WriteHeader(http.StatusBadRequest) // image doesn't exist
 		return
 	}
+
 	filename := image.Token + image.Timestamp + image.Extension
-	fileBytes, err := ioutil.ReadFile("./uploads/" + filename)
+	fileBytes, err := ioutil.ReadFile("../uploads/" + filename)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError) // image in db but not in filesystem
 		return
 	}
 
@@ -191,6 +191,11 @@ func GetAllImages(w http.ResponseWriter, r *http.Request) { // returns all image
 	//Get from db
 	var images []models.Image
 	if err := database.ImageInstance.Where("token = ?", image.Token).Find(&images).Error; err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	if len(images) == 0 { // previous function was not catching all instances with no images
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -238,7 +243,7 @@ func DeleteImageById(w http.ResponseWriter, r *http.Request) { // deletes an ima
 	filename := image.Token + image.Timestamp + image.Extension
 	fmt.Println(filename)
 	
-	if err = os.Remove("./uploads/" + filename); err != nil {
+	if err = os.Remove("../uploads/" + filename); err != nil {
 		// database and OS desynced, or some other issue with deleting file (file open/being used), should not happen
 		fmt.Println("ERROR: COULD NOT DELETE FILE FROM OS")
 	}
