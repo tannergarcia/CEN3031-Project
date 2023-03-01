@@ -30,16 +30,19 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 	//Parse form data
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("uploadfile")
+	
+	if err != nil {
+		fmt.Println("error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	imageText := r.Form["imagetext"]
 
 	//Only allow images
 	filetype := filepath.Ext(handler.Filename)
 	if filetype != ".jpeg" && filetype != ".png" && filetype != ".jpg" {
 		//errNew = "The provided file format is not allowed. Please upload a JPEG,JPG or PNG image"
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	} else if err != nil {
-		fmt.Println("error")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -65,6 +68,13 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 	//Parse form data
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("uploadfile")
+
+	if err != nil {
+		fmt.Println("error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 
 	//Only allow images
 	filetype := filepath.Ext(handler.Filename)
@@ -105,14 +115,12 @@ func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image 
 	image.Timestamp = timestamp
 
 	//Get from db
-	database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image)
-	if image.ID == 0 { //If image does not exist
-		json.NewEncoder(w).Encode("Image Not Found!")
+	if err := database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image).Error; err != nil { //If image does not exist
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	filename := image.Token + image.Timestamp + image.Extension
-	fileBytes, err := ioutil.ReadFile("./uploads/" + filename)
+	fileBytes, err := ioutil.ReadFile("../uploads/" + filename)
 	
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
