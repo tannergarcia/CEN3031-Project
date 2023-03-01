@@ -23,7 +23,7 @@ func main() {
 	r := mux.NewRouter()
 
 	//Routes
-	RegisterImageRoutes(r)
+	RegisterRoutes(r)
 
 	//Start server
 	log.Printf("Server is running on http://localhost:%s", PORT)
@@ -39,7 +39,7 @@ func main() {
 	log.Println(http.ListenAndServe(":"+PORT, handler))
 
 }
-func RegisterImageRoutes(r *mux.Router) {
+func RegisterRoutes(r *mux.Router) {
 	//User login
 	r.HandleFunc("/signin", auth.Signin).Methods("POST")
 	r.HandleFunc("/signup", auth.Signup).Methods("POST")
