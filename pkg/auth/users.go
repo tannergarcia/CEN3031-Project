@@ -29,6 +29,15 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	// check for missing user/password
+	if creds.Username == "" || creds.Password == "" {
+		// missing username or password
+		// TODO: make username and password requirements
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// check for dupe username
 	var foundUser models.User
 	if err := database.UserInstance.Where("username = ?", creds.Username).First(&foundUser).Error; err == nil {
@@ -67,6 +76,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	// We reach this point if the credentials we correctly stored in the database, and the default status of 200 is sent back
 	fmt.Println("User Signed Up")
+	w.WriteHeader(http.StatusOK)
 }
 
 func Signin(w http.ResponseWriter, r *http.Request) {
@@ -80,11 +90,18 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check for missing user/password
+	if creds.Username == "" || creds.Password == "" {
+		// missing username or password
+		// TODO: make username and password requirements
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// First look for user
 	var foundUser models.User
-	database.UserInstance.First(&foundUser, "username = ?", creds.Username)
 
-	if err := database.UserInstance.Where("username = ?", creds.Username).First(&foundUser).Error; err != nil {
+	if err := database.UserInstance.First(&foundUser, "username = ?", creds.Username).Error; err != nil {
 		// username not found
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -115,6 +132,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 		Expires: expiresAt,
 	})
 	fmt.Println("User Signed In")
+	w.WriteHeader(http.StatusOK)
 }
 
 /*
@@ -213,7 +231,11 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	// find session token in DB
 	var foundUser models.User
-	database.UserInstance.First(&foundUser, "session = ?", c.Value) // TODO: test if user doesn't exist
+	if err := database.UserInstance.First(&foundUser, "session = ?", c.Value).Error; err != nil {
+		// bad token
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	// remove session from DB
 	database.UserInstance.Model(&foundUser).Update("Session", "")
@@ -228,6 +250,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		Expires: time.Now(),
 	})
 	fmt.Println("User logged out")
+	w.WriteHeader(http.StatusOK)
 }
 
 func GetUser(r *http.Request) (string, error) {
