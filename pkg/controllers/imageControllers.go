@@ -13,18 +13,20 @@ import (
 	"path/filepath"
 )
 
-func ImageCreate(w http.ResponseWriter, r *http.Request) {
+func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into db  
 	fmt.Println(r.Cookies())
 
 	//Authenticate request
 	userID, err := auth.GetUser(r)
 	if err != nil {
 		fmt.Println("Authenitication Error")
-		panic(err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
 	}
 	fmt.Println("Found user: " + userID)
 
-	var errNew string
+	//var errNew string
+
 	//Parse form data
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("uploadfile")
@@ -33,27 +35,32 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) {
 	//Only allow images
 	filetype := filepath.Ext(handler.Filename)
 	if filetype != ".jpeg" && filetype != ".png" && filetype != ".jpg" {
-		errNew = "The provided file format is not allowed. Please upload a JPEG,JPG or PNG image"
-		//http_status = http.StatusBadRequest
-		panic(errNew)
-	} else {
-		//TODO check if text can fit into image
-		//TODO encode image with text
-		fmt.Println(imageText)
-		utils.AddImage(userID, filetype, &file, w) //Write image file and add to DB
+		//errNew = "The provided file format is not allowed. Please upload a JPEG,JPG or PNG image"
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	} else if err != nil {
+		fmt.Println("error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	if err != nil {
-		fmt.Println("error")
-		panic(err)
-	}
+	// TODO: check if text can fit into image
+	// TODO: encode image with text
+	
+	fmt.Println(imageText)
+	utils.AddImage(userID, filetype, &file, w) //Write image file and add to DB
+
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated) //http_status
 }
 
-func ImageDecode(w http.ResponseWriter, r *http.Request) {
-	var errNew string
+func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image from client, returns decoded text; doesn't upload into db
+
+	// does not require auth
+
+	//var errNew string 
+
 	var imageCode string
 	//Parse form data
 	r.ParseMultipartForm(32 << 20)
@@ -62,31 +69,31 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) {
 	//Only allow images
 	filetype := filepath.Ext(handler.Filename)
 	if filetype != ".jpeg" && filetype != ".png" && filetype != ".jpg" {
-		errNew = "The provided file format is not allowed. Please upload a JPEG,JPG or PNG image"
-		//http_status = http.StatusBadRequest
-		panic(errNew)
-	} else {
-		imageCode = utils.DecodeImage(&file)
+		//errNew = "The provided file format is not allowed. Please upload a JPEG,JPG or PNG image"
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	} else if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	if err != nil {
-		fmt.Println("error")
-		panic(err)
-	}
+	imageCode = utils.DecodeImage(&file)
+
+	
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	json.NewEncoder(w).Encode(imageCode)
-	//w.WriteHeader(http.StatusCreated) //http_status
+	w.WriteHeader(http.StatusOK)
 }
 
-func GetImageById(w http.ResponseWriter, r *http.Request) {
+func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file baased on db ID 
 	fmt.Println("Get image")
 
 	//Authenticate request
 	userID, err := auth.GetUser(r)
 	if err != nil {
-		fmt.Println("Authenitication Error")
-		panic(err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
 	}
 	fmt.Println("Found user: " + userID)
 
@@ -101,30 +108,35 @@ func GetImageById(w http.ResponseWriter, r *http.Request) {
 	database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image)
 	if image.ID == 0 { //If image does not exist
 		json.NewEncoder(w).Encode("Image Not Found!")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	filename := image.Token + image.Timestamp + image.Extention
+	filename := image.Token + image.Timestamp + image.Extension
 	fileBytes, err := ioutil.ReadFile("./uploads/" + filename)
+	
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Write(fileBytes)
 }
 
-func ExistingDecode(w http.ResponseWriter, r *http.Request) {
+func ExistingDecode(w http.ResponseWriter, r *http.Request) { // decodes an image from database, returns text to user
+
 	//Authenticate request
 	userID, err := auth.GetUser(r)
 	if err != nil {
-		fmt.Println("Authenitication Error")
-		panic(err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
 	}
 	fmt.Println("Found user: " + userID)
 
 	fmt.Println("Get image")
 
-	//Parse request
+	//Parse request, get details of desired image
 	var image models.Image
 	err2 := json.NewDecoder(r.Body).Decode(&image)
 	if err2 != nil {
@@ -136,16 +148,17 @@ func ExistingDecode(w http.ResponseWriter, r *http.Request) {
 	//Get from db
 	database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image)
 	if image.ID == 0 { //If image does not exist
-		json.NewEncoder(w).Encode("Image Not Found!")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	filename := image.Token + image.Timestamp + image.Extention
+	filename := image.Token + image.Timestamp + image.Extension
 	fileBytes, err := ioutil.ReadFile("./uploads/" + filename)
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	//TODO decode image
+	// TODO: decode image
 	fmt.Println(fileBytes[0])
 
 	w.WriteHeader(http.StatusOK)
@@ -153,36 +166,41 @@ func ExistingDecode(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetAllImages(w http.ResponseWriter, r *http.Request) {
+func GetAllImages(w http.ResponseWriter, r *http.Request) { // returns all images associated with a user
 	//Authenticate request
 	userID, err := auth.GetUser(r)
 	if err != nil {
-		fmt.Println("Authenitication Error")
-		panic(err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
 	}
 	fmt.Println("Found user: " + userID)
 
 	fmt.Println("Get all images")
-	//Parse request
 
 	var image models.Image
 	image.Token = userID
 
 	//Get from db
 	var images []models.Image
-	database.ImageInstance.Where("token = ?", image.Token).Find(&images)
+	if err := database.ImageInstance.Where("token = ?", image.Token).Find(&images).Error; err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(images)
 }
 
-func DeleteImageById(w http.ResponseWriter, r *http.Request) {
+func DeleteImageById(w http.ResponseWriter, r *http.Request) { // deletes an image from the database
+
 	//Authenticate request
 	userID, err := auth.GetUser(r)
 	if err != nil {
-		fmt.Println("Authenitication Error")
-		panic(err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
 	}
+
 	fmt.Println("Found user: " + userID)
 
 	fmt.Println("Delete image")
@@ -195,15 +213,27 @@ func DeleteImageById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	image.Token = userID
-	//Delete from db
-	database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image).Delete(&image)
-	if image.ID == 0 { //If image does not exist
-		json.NewEncoder(w).Encode("Image Not Found!")
-		//return
+	//First find in db
+	if err = database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image).Error; err != nil {
+		// image not found
+		w.WriteHeader(http.StatusNotFound)
+		return
 	}
-	//Delete file
-	filename := image.Token + image.Timestamp + image.Extention
-	fmt.Println(filename)
-	os.Remove("./uploads/" + filename)
 
+	// now delete from db
+	if err = database.ImageInstance.Delete(&image).Error; err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// now delete from OS
+	filename := image.Token + image.Timestamp + image.Extension
+	fmt.Println(filename)
+	
+	if err = os.Remove("./uploads/" + filename); err != nil {
+		// database and OS desynced, or some other issue with deleting file (file open/being used), should not happen
+		fmt.Println("ERROR: COULD NOT DELETE FILE FROM OS")
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
