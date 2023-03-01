@@ -27,7 +27,7 @@ func AddImage(token string, filetype string, file *multipart.File, w http.Respon
 	var image models.Image
 	image.Token = token
 	image.Timestamp = timestamp
-	image.Extention = filetype
+	image.Extension = filetype
 	database.ImageInstance.Create(&image)
 	json.NewEncoder(w).Encode(image)
 }
@@ -41,7 +41,7 @@ func WriteFile(fileName string, file *multipart.File) {
 	//Write image file
 	defer (*file).Close()
 
-	f, err := os.OpenFile("./uploads/"+fileName, os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.Create("../uploads/"+fileName)
 
 	if err != nil {
 		fmt.Println("error")
