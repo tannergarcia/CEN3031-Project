@@ -284,7 +284,7 @@ form enctype="multipart/form-data"
 </details>
 
 <details>
- <summary><code>GET</code> <code><b>/delete</b></code> Delete an image</summary>
+ <summary><code>DELETE</code> <code><b>/delete</b></code> Delete an image</summary>
 
 #### Parameters
 **Cookie authentication required**
