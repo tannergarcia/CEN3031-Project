@@ -42,7 +42,7 @@ func TestMain(m *testing.M) {
 
 	auth.Signin(signinResponseRecorder, signinRequest)
 
-	// now extract cookie from response for use in future
+	// now extract cookie from response for use in future tests
 
 	validCookie = signinResponseRecorder.Result().Cookies()[0]
 
@@ -223,13 +223,191 @@ func TestGetImageByID(t *testing.T) {
 		request.AddCookie(validCookie)
 
 		q := request.URL.Query()
-		q.Add("timestamp", "1677649649195384700") // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
+		q.Add("timestamp", "1677710640748805500") // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
 		request.URL.RawQuery = q.Encode()
 
 		GetImageById(responseRecorder, request)
 
 
 		if responseRecorder.Code != http.StatusOK { 
+			t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
+		}
+	})
+}
+
+func TestExistingDecode(t *testing.T) {
+	t.Run("not logged in", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodGet, "/decode", nil)
+		responseRecorder := httptest.NewRecorder()
+
+		ExistingDecode(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusUnauthorized {
+			t.Errorf("Want status '%d', got '%d'", http.StatusUnauthorized, responseRecorder.Code)
+		}
+	})
+
+	t.Run("no data", func(t *testing.T) {
+
+		request := httptest.NewRequest(http.MethodGet, "/decode", nil)
+		responseRecorder := httptest.NewRecorder()
+		
+		request.AddCookie(validCookie)
+
+		ExistingDecode(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusBadRequest {
+			t.Errorf("Want status '%d', got '%d'", http.StatusBadRequest, responseRecorder.Code)
+		}
+	})
+
+	t.Run("bad data", func(t *testing.T) {
+
+		badPayload, _ := json.Marshal(map[string]string{"timestamp": "banana"})
+
+
+		request := httptest.NewRequest(http.MethodGet, "/decode", strings.NewReader(string(badPayload)))
+		responseRecorder := httptest.NewRecorder()
+
+		
+		request.AddCookie(validCookie)
+
+		ExistingDecode(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusBadRequest {
+			t.Errorf("Want status '%d', got '%d'", http.StatusBadRequest, responseRecorder.Code)
+		}
+	})
+
+	t.Run("correct request", func(t *testing.T) {
+
+		badPayload, _ := json.Marshal(map[string]string{"timestamp": "1677710640748805500"}) 
+
+
+		request := httptest.NewRequest(http.MethodGet, "/decode", strings.NewReader(string(badPayload)))
+		responseRecorder := httptest.NewRecorder()
+
+		
+		request.AddCookie(validCookie)
+
+		ExistingDecode(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusOK {
+			t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
+		}
+	})
+}
+
+
+func TestGetAllImages(t *testing.T) {
+	t.Run("not logged in", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodGet, "/download/list/", nil)
+		responseRecorder := httptest.NewRecorder()
+
+		GetAllImages(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusUnauthorized {
+			t.Errorf("Want status '%d', got '%d'", http.StatusUnauthorized, responseRecorder.Code)
+		}
+	})
+
+	t.Run("user with no images", func(t *testing.T) {
+
+		// first login to test user with no images
+		userLogin, _ := json.Marshal(map[string]string{"password": "banana", "username": "tanner"}) // testing user
+
+		signinRequest :=httptest.NewRequest(http.MethodPost, "/signin", strings.NewReader(string(userLogin)))
+		signinResponseRecorder := httptest.NewRecorder()
+
+		auth.Signin(signinResponseRecorder, signinRequest)
+
+		newCookie := signinResponseRecorder.Result().Cookies()[0] // save cookie
+
+
+	
+		// now attempt to get all images for this user
+		request := httptest.NewRequest(http.MethodGet, "/download/list/", nil)
+		responseRecorder := httptest.NewRecorder()
+		
+		request.AddCookie(newCookie)
+
+		GetAllImages(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusNotFound {
+			t.Errorf("Want status '%d', got '%d'", http.StatusNotFound, responseRecorder.Code)
+		}
+	})
+
+	t.Run("correct request", func(t *testing.T) {
+	
+		request := httptest.NewRequest(http.MethodGet, "/download/list/", nil)
+		responseRecorder := httptest.NewRecorder()
+		
+		request.AddCookie(validCookie)
+
+		GetAllImages(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusOK {
+			t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
+		}
+	})
+}
+
+func TestDeleteImageByID(t *testing.T) {
+	t.Run("not logged in", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodDelete, "/delete", nil)
+		responseRecorder := httptest.NewRecorder()
+
+		DeleteImageById(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusUnauthorized {
+			t.Errorf("Want status '%d', got '%d'", http.StatusUnauthorized, responseRecorder.Code)
+		}
+	})
+
+	t.Run("no data", func(t *testing.T) {
+
+		request := httptest.NewRequest(http.MethodDelete, "/delete", strings.NewReader(""))
+		responseRecorder := httptest.NewRecorder()
+		
+		request.AddCookie(validCookie)
+
+		DeleteImageById(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusBadRequest {
+			t.Errorf("Want status '%d', got '%d'", http.StatusBadRequest, responseRecorder.Code)
+		}
+	})
+	t.Run("bad image", func(t *testing.T) {
+
+		imageRequest, _ := json.Marshal(map[string]string{"timestamp": "banana"})
+
+
+		request := httptest.NewRequest(http.MethodDelete, "/delete", strings.NewReader(string(imageRequest)))
+		responseRecorder := httptest.NewRecorder()
+		
+		request.AddCookie(validCookie)
+
+		DeleteImageById(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusNotFound {
+			t.Errorf("Want status '%d', got '%d'", http.StatusNotFound, responseRecorder.Code)
+		}
+	})
+	t.Run("correct request", func(t *testing.T) {
+
+
+		imageRequest, _ := json.Marshal(map[string]string{"timestamp": "1677714750832795800"}) // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
+
+
+		request := httptest.NewRequest(http.MethodDelete, "/delete", strings.NewReader(string(imageRequest)))
+		responseRecorder := httptest.NewRecorder()
+		
+		request.AddCookie(validCookie)
+
+		DeleteImageById(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusOK {
 			t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
 		}
 	})
