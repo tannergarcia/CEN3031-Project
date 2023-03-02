@@ -3,17 +3,19 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/tannergarcia/PhotoBomb/pkg/auth"
-	"github.com/tannergarcia/PhotoBomb/pkg/database"
-	"github.com/tannergarcia/PhotoBomb/pkg/models"
-	"github.com/tannergarcia/PhotoBomb/pkg/utils"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/tannergarcia/PhotoBomb/pkg/auth"
+	"github.com/tannergarcia/PhotoBomb/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/pkg/models"
+	"github.com/tannergarcia/PhotoBomb/pkg/utils"
 )
 
-func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into db  
+func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into db
 	fmt.Println(r.Cookies())
 
 	//Authenticate request
@@ -30,7 +32,7 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 	//Parse form data
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("uploadfile")
-	
+
 	if err != nil {
 		fmt.Println("error")
 		w.WriteHeader(http.StatusBadRequest)
@@ -41,6 +43,7 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 
 	//Only allow images
 	filetype := filepath.Ext(handler.Filename)
+	filetype = strings.ToLower(filetype)
 	if filetype != ".jpeg" && filetype != ".png" && filetype != ".jpg" {
 		//errNew = "The provided file format is not allowed. Please upload a JPEG,JPG or PNG image"
 		w.WriteHeader(http.StatusBadRequest)
@@ -49,10 +52,9 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 
 	// TODO: check if text can fit into image
 	// TODO: encode image with text
-	
+
 	fmt.Println(imageText)
 	utils.AddImage(userID, filetype, &file, w) //Write image file and add to DB
-
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated) //http_status
@@ -62,7 +64,7 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 
 	// does not require auth
 
-	//var errNew string 
+	//var errNew string
 
 	var imageCode string
 	//Parse form data
@@ -74,7 +76,6 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 
 	//Only allow images
 	filetype := filepath.Ext(handler.Filename)
@@ -89,14 +90,12 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 
 	imageCode = utils.DecodeImage(&file)
 
-	
-
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	json.NewEncoder(w).Encode(imageCode)
 	w.WriteHeader(http.StatusOK)
 }
 
-func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file baased on db ID 
+func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file baased on db ID
 	fmt.Println("Get image")
 
 	//Authenticate request
@@ -121,7 +120,7 @@ func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image 
 	}
 	filename := image.Token + image.Timestamp + image.Extension
 	fileBytes, err := ioutil.ReadFile("../uploads/" + filename)
-	
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
