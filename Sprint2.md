@@ -546,3 +546,32 @@ Using Cypress with the End to End testing.
   </code>
 
   </details>
+
+
+#### Backend:
+
+<details> <summary>User API</summary>
+
+Tests are run on every function to ensure signup, signin, and logout works
+
+Tested scenarios include:
+- Empty requests
+- Requests with wrong format
+- Non existant user for signin
+- Wrong password for signin
+- Malformed/missing cookies
+- Already taken username for signup
+- Missing username/password
+- Correct requests
+
+</details>
+
+<details> <summary>Image API</summary>
+
+Tests are run on every function of imageControllers.go
+
+Tested scenarios include:
+- Bad authentitation
+- Wrong filetype
+- Bad/missing data
+- Attempts to get nonexistant images
