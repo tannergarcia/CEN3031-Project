@@ -1,7 +1,13 @@
-User Stories
+New User Stories
 
--As a user, I want to log into my account because I want to view my personalized dashboard
--
+-As a user, I want to log into my account so that I can view my personalized dashboard
+
+
+-As a writer, I want to view decoded images so that I can read my past stories
+
+
+-As a friend, I want to view decoded images so that I can read my friend's encoded messages
+
 
 ## API Documentation
 ------------------------------------------------------------------------------------------
@@ -325,7 +331,30 @@ form enctype="multipart/form-data"
 </details>
 ------------------------------------------------------------------------------------------
 
-#### Frontend Unit Testing
+#### Unit Tests
+
+Front-end:
+<details>
+ <summary>1. Makes sure that there is no already uploaded image when the user first logs in.</summary> 
+  
+   -Mounts Upload Component
+ 
+   -Checks whether the text
+ 
+    is not the default.
+ </details>
+ <details>
+ <summary>2. Makes sure you can not interact with elements that are not a part of the dialog that the component opens
+  
+  Makes sure that the dialog does not close if there are attempts to do so.</summary> 
+  
+   -Mounts Upload Component
+ 
+   -Clicks on Decode twice
+ 
+   -Catches error that Decode can not be interacted with
+ </details>
+
 <details>
 
 DataServiceComponent
@@ -387,7 +416,19 @@ HomeComponent
   </details>
   
   
-#### Cypress Testing
+ #### Cypress Tests
+ <details>
+ <summary>1. Makes sure that user can upload images and interact with all elements of interface.</summary> 
+  
+   -Goes to localhost
+ 
+   -Uploads file from repository
+ 
+   -Clicks on encode and exits
+ 
+   -Clicks on decode and exits
+ </details>
+
   <details>
 Using Cypress with the End to End testing.
 1. Registered users
