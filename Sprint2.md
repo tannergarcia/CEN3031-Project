@@ -8,6 +8,7 @@
 
 -As a friend, I want to view decoded images so that I can read my friend's encoded messages
 
+
 #### Work Completed
 
  Front-end:
@@ -17,6 +18,12 @@
 -Changed to sending requests with credentials for authentication
 
 -Changed user interface layout to be more user friendly
+
+-Cleaned up the login and registration pages of the website
+
+- Added warnings and messages to help indicate to the user on what needs to be fixed
+
+- Added a user list as a way of showing the created users within the backend that currently exist
 
 -Cypress and Unit Tests
 
