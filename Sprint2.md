@@ -8,6 +8,29 @@ New User Stories
 
 -As a friend, I want to view decoded images so that I can read my friend's encoded messages
 
+Work Completed
+
+Front-end:
+
+-Implemented cookies that contain user tokens stored in the browser
+
+-Changed to sending requests with credentials for authentication
+
+-Changed user interface layout to be more user friendly
+
+-Cypress and Unit Tests
+
+Back-end:
+
+-Added authentication to the image API
+
+-Improved HTTP response status
+
+-API Documentation
+
+-Unit Tests
+
+
 
 ## API Documentation
 ------------------------------------------------------------------------------------------
