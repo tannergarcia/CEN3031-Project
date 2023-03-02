@@ -1,7 +1,9 @@
 New User Stories
 
 -As a user, I want to log into my account so that I can view my personalized dashboard
+
 -As a writer, I want to view decoded images so that I can read my past stories
+
 -As a friend, I want to view decoded images so that I can read my friend's encoded messages
 
 ## API Documentation
