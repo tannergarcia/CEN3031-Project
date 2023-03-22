@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/tannergarcia/PhotoBomb/pkg/controllers"
-	"github.com/tannergarcia/PhotoBomb/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/controllers"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
 	"log"
 	"net/http"
 
-	"github.com/tannergarcia/PhotoBomb/pkg/auth"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/auth"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"

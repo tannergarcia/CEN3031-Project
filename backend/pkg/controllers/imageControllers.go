@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/tannergarcia/PhotoBomb/pkg/auth"
-	"github.com/tannergarcia/PhotoBomb/pkg/database"
-	"github.com/tannergarcia/PhotoBomb/pkg/models"
-	"github.com/tannergarcia/PhotoBomb/pkg/utils"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/auth"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/models"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/utils"
 )
 
 func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into db

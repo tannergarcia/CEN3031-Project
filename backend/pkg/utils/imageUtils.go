@@ -3,8 +3,8 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/tannergarcia/PhotoBomb/pkg/database"
-	"github.com/tannergarcia/PhotoBomb/pkg/models"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/models"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -45,13 +45,13 @@ func WriteFile(fileName string, file *multipart.File) {
 
 	if err != nil {
 		fmt.Println("error")
-		panic(err)
+		return
 	}
 	defer f.Close()
 	io.Copy(f, *file)
 	if err != nil {
 		fmt.Println("error")
-		panic(err)
+		return
 	}
 }
 

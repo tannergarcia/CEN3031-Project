@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/tannergarcia/PhotoBomb/pkg/database"
-	"github.com/tannergarcia/PhotoBomb/pkg/models"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/models"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"

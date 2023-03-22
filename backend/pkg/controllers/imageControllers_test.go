@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"testing"
-	"github.com/tannergarcia/PhotoBomb/pkg/database"
-	"github.com/tannergarcia/PhotoBomb/pkg/auth"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/auth"
 	"math/rand"
 	"time"
 	"os"

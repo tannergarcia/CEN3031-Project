@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tannergarcia/PhotoBomb/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
 
 	"encoding/json"
 	"math/rand"
