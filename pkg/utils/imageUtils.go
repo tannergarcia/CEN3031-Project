@@ -45,14 +45,12 @@ func WriteFile(fileName string, file *multipart.File) {
 
 	if err != nil {
 		fmt.Println("error")
-		//panic(err)
 		return
 	}
 	defer f.Close()
 	io.Copy(f, *file)
 	if err != nil {
 		fmt.Println("error")
-		//panic(err)
 		return
 	}
 }
