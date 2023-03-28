@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"image/png"
+	"image/jpeg"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -57,8 +59,14 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 	// maybe add option to encrypt this text?
 
 	fmt.Println(imageText)
+	var newImage image.Image
 
-	newImage, _, err := image.Decode(file)
+	if filetype == ".jpeg" || filetype == ".jpg" {
+		newImage, err = jpeg.Decode(file)
+	} else {
+		newImage, err = png.Decode(file)
+	}
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println("mutlipartfile to image.Image failed")
@@ -115,9 +123,9 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	json.NewEncoder(w).Encode(imageCode)
+	w.Header().Set("Content-Type", "application/text; charset=UTF-8") // CHANGED TO PLAIN TEXT
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(imageCode))
 }
 
 func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file baased on db ID
