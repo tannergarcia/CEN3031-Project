@@ -1,20 +1,22 @@
 package controllers
 
 import (
-	"testing"
-	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
-	"github.com/tannergarcia/PhotoBomb/backend/pkg/auth"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
 	"math/rand"
-	"time"
-	"os"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
-	"encoding/json"
+	"os"
 	"strings"
-	"fmt"
-    "io"
-    "mime/multipart"
-	"bytes"
+	"testing"
+	"time"
+
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/auth"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
 )
 
 // TODO: clean up DB after tests
@@ -80,7 +82,7 @@ func TestImageCreate(t *testing.T) {
 	t.Run("wrong filetype", func(t *testing.T) {
 
 		// imbed image in request
-		b, w := createMultipartFormData("uploadfile","../notes.txt")
+		b, w := createMultipartFormData("uploadfile","../notes.txt", "")
 
 		// imbed image text in request
 		//w.WriteField("imagetext", "hello")
@@ -102,11 +104,7 @@ func TestImageCreate(t *testing.T) {
 	t.Run("correct request", func(t *testing.T) {
 
 		// imbed image in request
-		b, w := createMultipartFormData("uploadfile","../test_image.jpg")
-
-		// imbed image text in request
-		//w.WriteField("imagetext", "hello")
-		// TODO: HANDLE IMAGE TEXT
+		b, w := createMultipartFormData("uploadfile","../test_image.jpg", "secret message")
 
 
 		request := httptest.NewRequest(http.MethodPost, "/upload/encode", &b)
@@ -121,6 +119,7 @@ func TestImageCreate(t *testing.T) {
 			t.Errorf("Want status '%d', got '%d'", http.StatusCreated, responseRecorder.Code)
 		}
 	})
+	// TODO: add tests for too long of text, no text, png
 }
 
 func TestImageDecode(t *testing.T) {
@@ -138,7 +137,7 @@ func TestImageDecode(t *testing.T) {
 	t.Run("wrong filetype", func(t *testing.T) {
 
 		// imbed image in request
-		b, w := createMultipartFormData("uploadfile","../notes.txt")
+		b, w := createMultipartFormData("uploadfile","../notes.txt", "")
 
 
 		request := httptest.NewRequest(http.MethodPost, "/upload/encode", &b)
@@ -155,7 +154,7 @@ func TestImageDecode(t *testing.T) {
 	t.Run("correct request", func(t *testing.T) {
 
 		// imbed image in request
-		b, w := createMultipartFormData("uploadfile","../test_image.jpg")
+		b, w := createMultipartFormData("uploadfile","../test_encoded.jpg", "")
 
 		request := httptest.NewRequest(http.MethodPost, "/upload/encode", &b)
 		responseRecorder := httptest.NewRecorder()
@@ -164,8 +163,12 @@ func TestImageDecode(t *testing.T) {
 
 		ImageDecode(responseRecorder, request)
 
-		if responseRecorder.Code != http.StatusCreated && responseRecorder.Code != http.StatusOK { // FIXME: not sure why its returning 200 okay but it works
-			t.Errorf("Want status '%d', got '%d'", http.StatusCreated, responseRecorder.Code)
+		if responseRecorder.Code != http.StatusOK { 
+			t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
+		}
+		responseData, _ := ioutil.ReadAll(responseRecorder.Body)
+		if (string(responseData) != "secret message") {
+			t.Errorf("Expected message '%s', got '%s'", "secret message", string(responseData))
 		}
 	})
 }
@@ -414,7 +417,7 @@ func TestDeleteImageByID(t *testing.T) {
 }
 
 
-func createMultipartFormData(fieldName, fileName string) (bytes.Buffer, *multipart.Writer) {
+func createMultipartFormData(fieldName, fileName, message string) (bytes.Buffer, *multipart.Writer) {
     var b bytes.Buffer
     var err error
     w := multipart.NewWriter(&b)
@@ -428,6 +431,7 @@ func createMultipartFormData(fieldName, fileName string) (bytes.Buffer, *multipa
         fmt.Printf("Error with io.Copy: %v", err)
 		panic(err)
     }
+	w.WriteField("imagetext", message)
     w.Close()
     return b, w
 }

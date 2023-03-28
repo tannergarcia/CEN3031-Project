@@ -1,14 +1,19 @@
 package controllers
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"image"
+	"image/png"
+	"image/jpeg"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/auyer/steganography"
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/auth"
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/models"
@@ -39,22 +44,46 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 		return
 	}
 
-	imageText := r.Form["imagetext"]
+	imageText := r.FormValue("imagetext")
 
 	//Only allow images
 	filetype := filepath.Ext(handler.Filename)
 	filetype = strings.ToLower(filetype)
 	if filetype != ".jpeg" && filetype != ".png" && filetype != ".jpg" {
-		//errNew = "The provided file format is not allowed. Please upload a JPEG,JPG or PNG image"
+		//errNew = "The provided file format is not allowed. Please upload a JPEG/JPG or PNG image"
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	// TODO: check if text can fit into image
-	// TODO: encode image with text
+	// maybe add option to encrypt this text?
 
 	fmt.Println(imageText)
-	utils.AddImage(userID, filetype, &file, w) //Write image file and add to DB
+	var newImage image.Image
+
+	if filetype == ".jpeg" || filetype == ".jpg" {
+		newImage, err = jpeg.Decode(file)
+	} else {
+		newImage, err = png.Decode(file)
+	}
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println("mutlipartfile to image.Image failed")
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	if err = steganography.Encode(buf, newImage, []byte(imageText)); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println("message encoding failed")
+		return
+	}
+
+	// encoded image bytes now contained in byte buffer "buf"
+	// now pass this along to AddImage
+
+	utils.AddImage(userID, filetype, buf, w) //Write image file and add to DB
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated) //http_status
@@ -88,11 +117,15 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 		return
 	}
 
-	imageCode = utils.DecodeImage(&file)
+	imageCode, err = utils.DecodeImage(&file)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	json.NewEncoder(w).Encode(imageCode)
+	w.Header().Set("Content-Type", "application/text; charset=UTF-8") // CHANGED TO PLAIN TEXT
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(imageCode))
 }
 
 func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file baased on db ID
