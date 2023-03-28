@@ -164,7 +164,7 @@ func TestImageDecode(t *testing.T) {
 
 		ImageDecode(responseRecorder, request)
 
-		if responseRecorder.Code != http.StatusCreated && responseRecorder.Code != http.StatusOK { // FIXME: not sure why its returning 200 okay but it works
+		if responseRecorder.Code != http.StatusOK { 
 			t.Errorf("Want status '%d', got '%d'", http.StatusCreated, responseRecorder.Code)
 		}
 	})
