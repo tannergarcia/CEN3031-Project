@@ -3,7 +3,9 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"image"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -12,6 +14,7 @@ import (
 
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/models"
+	"github.com/auyer/steganography"
 )
 
 // Add image to file and db
@@ -33,9 +36,19 @@ func AddImage(token string, filetype string, file *bytes.Buffer, w http.Response
 	json.NewEncoder(w).Encode(image)
 }
 
-func DecodeImage(file *multipart.File) string {
+func DecodeImage(file *multipart.File) (string, error) {
 	//TODO return decoded image text
-	return "Sample decode"
+	newImage, _, err := image.Decode(*file)
+	if err != nil {
+		fmt.Println("mutlipartfile to image.Image failed")
+		return "", errors.New("failed converting multipartfile to image.Image")
+	}
+	
+	size := steganography.GetMessageSizeFromImage(newImage)
+
+	msg := steganography.Decode(size, newImage)
+
+	return string(msg), nil
 }
 
 func WriteFile(fileName string, file *bytes.Buffer) {

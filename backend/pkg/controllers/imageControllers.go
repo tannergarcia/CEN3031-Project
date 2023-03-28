@@ -109,7 +109,11 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 		return
 	}
 
-	imageCode = utils.DecodeImage(&file)
+	imageCode, err = utils.DecodeImage(&file)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	json.NewEncoder(w).Encode(imageCode)
