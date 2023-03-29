@@ -77,9 +77,26 @@
                         <input matInput [(ngModel)]="loginPassword" type="password" placeholder="Password" style="color: white;"/>
                     </mat-form-field>
                     <!-- errors -->
+
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i
+                                class="fa"
+                                [ngClass]="{
+                                'fa-eye-slash': !fieldTextType,
+                                'fa-eye': fieldTextType
+                                }"
+                                (click)="toggleFieldTextType()"
+                                formControlName="button" id="hider" style="color:white; float: right; margin-top: -22%; margin-right: 4%"
+                                ></i>
+                        </span>
+                    </div>
                     
                 </div>
 
+                <div *ngIf="submitted && error" class="invalid-feedback" style="font-size: 10px; margin-top: -10px; margin-left:40px; color:white; position:absolute;">
+                    Username or password is invalid.
+                </div>
 
                 <div id="buttons">
                     <!-- load button -->
@@ -91,9 +108,6 @@
                     
                 </div>
 
-                <div *ngIf="submitted && error" class="invalid-feedback" style="margin-top: 20px; color:white">
-                    Username or password is invalid.
-                </div>
 
             </div>
         </div>

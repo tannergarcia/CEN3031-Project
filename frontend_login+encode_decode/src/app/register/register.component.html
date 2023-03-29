@@ -71,7 +71,10 @@
                         <!-- errors -->
                         
                     </div>
-    
+
+                    <div *ngIf="submitted && error" class="invalid-feedback" style="font-size: 10px; margin-top: -10px; margin-left:40px; color:white; position:absolute;">
+                        Username is taken.
+                    </div>
     
                     <div id="buttons">
                         <!-- load button -->
@@ -83,9 +86,6 @@
                         
                     </div>
     
-                    <div *ngIf="submitted && error" class="invalid-feedback" style="margin-top: 20px; color:white">
-                        Username is taken.
-                    </div>
     
                 </div>
             </div>
