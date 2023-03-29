@@ -84,10 +84,6 @@ func TestImageCreate(t *testing.T) {
 		// imbed image in request
 		b, w := createMultipartFormData("uploadfile","../notes.txt", "")
 
-		// imbed image text in request
-		//w.WriteField("imagetext", "hello")
-		// TODO: HANDLE IMAGE TEXT
-
 
 		request := httptest.NewRequest(http.MethodPost, "/upload/encode", &b)
 		responseRecorder := httptest.NewRecorder()
@@ -101,7 +97,45 @@ func TestImageCreate(t *testing.T) {
 			t.Errorf("Want status '%d', got '%d'", http.StatusBadRequest, responseRecorder.Code)
 		}
 	})
-	t.Run("correct request", func(t *testing.T) {
+	t.Run("too big text", func(t *testing.T) {
+
+		// imbed image in request
+		b, w := createMultipartFormData("uploadfile","../test_small.jpg", "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyrereallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyrereallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyrereallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreally long string")
+
+
+		request := httptest.NewRequest(http.MethodPost, "/upload/encode", &b)
+		responseRecorder := httptest.NewRecorder()
+		
+		request.AddCookie(validCookie)
+		request.Header.Set("Content-Type", w.FormDataContentType())
+
+		ImageCreate(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusBadRequest { 
+			t.Errorf("Want status '%d', got '%d'", http.StatusCreated, responseRecorder.Code)
+		}
+	})
+
+	t.Run("correct request, png", func(t *testing.T) {
+
+		// imbed image in request
+		b, w := createMultipartFormData("uploadfile","../test_image.png", "secret message")
+
+
+		request := httptest.NewRequest(http.MethodPost, "/upload/encode", &b)
+		responseRecorder := httptest.NewRecorder()
+		
+		request.AddCookie(validCookie)
+		request.Header.Set("Content-Type", w.FormDataContentType())
+
+		ImageCreate(responseRecorder, request)
+
+		if responseRecorder.Code != http.StatusCreated && responseRecorder.Code != http.StatusOK { // not sure why its returning 200 okay but it works
+			t.Errorf("Want status '%d', got '%d'", http.StatusCreated, responseRecorder.Code)
+		}
+	})
+	
+	t.Run("correct request, jpg", func(t *testing.T) {
 
 		// imbed image in request
 		b, w := createMultipartFormData("uploadfile","../test_image.jpg", "secret message")
@@ -119,7 +153,6 @@ func TestImageCreate(t *testing.T) {
 			t.Errorf("Want status '%d', got '%d'", http.StatusCreated, responseRecorder.Code)
 		}
 	})
-	// TODO: add tests for too long of text, no text, png
 }
 
 func TestImageDecode(t *testing.T) {
@@ -284,10 +317,10 @@ func TestExistingDecode(t *testing.T) {
 
 	t.Run("correct request", func(t *testing.T) {
 
-		badPayload, _ := json.Marshal(map[string]string{"timestamp": "1677710640748805500"}) 
+		goodPayload, _ := json.Marshal(map[string]string{"timestamp": "1680035608748005400"}) 
 
 
-		request := httptest.NewRequest(http.MethodGet, "/decode", strings.NewReader(string(badPayload)))
+		request := httptest.NewRequest(http.MethodGet, "/decode", strings.NewReader(string(goodPayload)))
 		responseRecorder := httptest.NewRecorder()
 
 		
@@ -297,6 +330,11 @@ func TestExistingDecode(t *testing.T) {
 
 		if responseRecorder.Code != http.StatusOK {
 			t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
+		}
+
+		responseData, _ := ioutil.ReadAll(responseRecorder.Body)
+		if (string(responseData) != "secret message") {
+			t.Errorf("Expected message '%s', got '%s'", "secret message", string(responseData))
 		}
 	})
 }

@@ -37,13 +37,26 @@ func AddImage(token string, filetype string, file *bytes.Buffer, w http.Response
 }
 
 func DecodeImage(file *multipart.File) (string, error) {
-	//TODO return decoded image text
 	newImage, _, err := image.Decode(*file)
 	if err != nil {
 		fmt.Println("mutlipartfile to image.Image failed")
 		return "", errors.New("failed converting multipartfile to image.Image")
 	}
 	
+	size := steganography.GetMessageSizeFromImage(newImage)
+
+	msg := steganography.Decode(size, newImage)
+
+	return string(msg), nil
+}
+
+func DecodeImageBytes(file *bytes.Buffer) (string, error) {
+	newImage, _, err := image.Decode(file)
+	if err != nil {
+		fmt.Println("byte buffer to image.Image failed")
+		return "", errors.New("failed converting byte buffer to image.Image")
+	}
+
 	size := steganography.GetMessageSizeFromImage(newImage)
 
 	msg := steganography.Decode(size, newImage)
