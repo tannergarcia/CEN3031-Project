@@ -1,0 +1,29 @@
+<style>
+    #buttons{
+        position: absolute;
+        top: 30px;
+        right: 50px;
+    }
+
+
+</style>
+
+<div style="text-align: center;">
+    <p>Welcome back username!</p>
+    <p>Need to pull username from database.</p>    
+</div>
+
+<div>
+    <app-toolbar></app-toolbar>
+
+    <div>
+        <app-upload></app-upload>
+    </div>
+    
+    <router-outlet></router-outlet>
+</div>
+
+<div id="buttons">
+    <button mat-raised-button color="primary" style="background-color: rgb(127, 136, 147); right: 15px; color:white">ALBUM</button>
+    <button mat-raised-button color="primary" (click)="goToPage('signin')" style="background-color: rgb(127, 136, 147); color:white">LOGOUT</button>
+</div>
