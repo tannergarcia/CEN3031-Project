@@ -1,0 +1,13 @@
+.file-input {
+    display: none;
+  }
+
+.tile-image {
+  width:100%;
+  height: auto;
+}
+
+.clicked {
+  width:110%;
+  height: auto;
+}

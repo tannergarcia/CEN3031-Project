@@ -46,10 +46,14 @@ export class LoginComponent {
     this.submitted = true;
     this.alertService.clear_warnings();
     this.httpClient.post('http://localhost:8080/signin', {
+      withCredentials: true,  
       username: this.loginUsername,
       password: this.loginPassword
     }).subscribe((response: any) => {
+      console.log("login");
+      console.log(response);
       if(response || 'User Signed In'){
+        
         //removed, not jwt currently
         //localStorage.setItem('token', response.jwt)
         //this.router.navigate(['profile'])

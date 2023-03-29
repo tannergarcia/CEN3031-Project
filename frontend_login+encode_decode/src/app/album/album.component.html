@@ -1,0 +1,6 @@
+
+<mat-grid-list cols="3" rowHeight="6:4">
+    <mat-grid-tile (click)="highlight($event)" *ngFor="let tileImage of displayImageList"> 
+      <img class="tile-image" [src]="tileImage" layout-fill/>
+    </mat-grid-tile>
+

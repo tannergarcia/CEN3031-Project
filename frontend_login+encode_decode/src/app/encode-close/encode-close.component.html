@@ -1,0 +1,18 @@
+<div fxLayout="column">
+    <mat-dialog-content>
+
+        <mat-form-field appearance="fill">
+            <h1>Are you sure you want to close encoding? </h1> 
+            <h1>Your message will be deleted</h1>
+            
+        </mat-form-field>
+    
+    </mat-dialog-content>
+    
+    <mat-dialog-actions fxFlex="" fxLayout="row" fxLayoutGap="10">
+        <div fxFlex=""></div>         
+        
+        <button mat-raised-button color="accent" class="mat-raised-button"(click)="close()" >Cancel</button>
+        <button mat-raised-button color="warn"class="mat-raised-button"(click)="closeAll()">Discard</button>
+    </mat-dialog-actions>
+</div>

@@ -3,6 +3,8 @@ import { UploadComponent } from '../upload/upload.component';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogConfig} from '@angular/material/dialog';
 import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import { DecodeSaveComponent } from '../decode-save/decode-save.component';
 
 
 export interface DialogData {
@@ -16,24 +18,28 @@ export interface DialogData {
 })
 
 export class DecodeComponent implements OnInit{
-
-  form!: FormGroup;
-  test: unknown;
-  
+  test!: string;
+  public service!: UploadComponent;
   
   constructor(
-    public dialog: MatDialogRef<DecodeComponent>,
-    private service: UploadComponent){}
+    public dialog: MatDialogRef<DecodeComponent>, private dialogSave: MatDialog
+    ){console.log("decode component")} 
     
     ngOnInit() {
-      this.service.getDecoded()
-        .subscribe(response => {
-          this.test = response;
-        });
+      this.service.getDecoded().subscribe((rslt:Object)=>{
+        this.test = JSON.stringify(rslt);
+        console.log(this.test)
       }
-
+      )
+      
+    }
 
   save() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+  
+    let dialogRef = this.dialogSave.open(DecodeSaveComponent, dialogConfig);
+    dialogRef.componentInstance.encodeComp = this;
     this.dialog.close();
   }
 

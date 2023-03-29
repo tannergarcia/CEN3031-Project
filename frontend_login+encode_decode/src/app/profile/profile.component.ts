@@ -9,13 +9,29 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent {
 
+  static selectedIndex: number;
+  public classRef = ProfileComponent;
+  public text = "New"
+
   constructor(
     private httpClient: HttpClient,
     private router: Router
   ){
+    ProfileComponent.selectedIndex = 0;
   }
 
-  
+  Change(){
+    
+    if (this.classRef.selectedIndex == 0){
+      this.classRef.selectedIndex = 1;
+      this.text = "Album"
+    }
+    else{
+      this.classRef.selectedIndex = 0;
+      this.text = "New"
+    }
+    
+  }
 
   goToPage(pageName:string){
     this.router.navigate([`${pageName}`]);

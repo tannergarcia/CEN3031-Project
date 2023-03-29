@@ -19,16 +19,19 @@ import {MatInputModule} from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ToolbarComponent } from './toolbar/toolbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ImagebtnsComponent } from './imagebtns/imagebtns.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { TextboxComponent } from './textbox/textbox.component';
 import { UploadComponent } from './upload/upload.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { DecodeComponent } from './decode/decode.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EncodeComponent } from './encode/encode.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { AlbumComponent } from './album/album.component';
+import {MatGridListModule} from '@angular/material/grid-list';
+import { EncodeSaveComponent } from './encode-save/encode-save.component';
+import { EncodeCloseComponent } from './encode-close/encode-close.component';
+import { DecodeSaveComponent } from './decode-save/decode-save.component';
 
 @NgModule({
   declarations: [
@@ -37,12 +40,13 @@ import { EncodeComponent } from './encode/encode.component';
     ProfileComponent,
     RegisterComponent,
     WarningsComponent,
-    ToolbarComponent,
-    ImagebtnsComponent,
-    TextboxComponent,
     UploadComponent,
     DecodeComponent,
-    EncodeComponent
+    EncodeComponent,
+    AlbumComponent,
+    EncodeSaveComponent,
+    EncodeCloseComponent,
+    DecodeSaveComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +61,10 @@ import { EncodeComponent } from './encode/encode.component';
     MatDividerModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatTabsModule,
+    MatGridListModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
