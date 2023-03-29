@@ -72,7 +72,6 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 		fmt.Println("mutlipartfile to image.Image failed")
 		return
 	}
-
 	buf := new(bytes.Buffer)
 	if err = steganography.Encode(buf, newImage, []byte(imageText)); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
