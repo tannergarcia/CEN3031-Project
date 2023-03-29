@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
-	"image/png"
 	"image/jpeg"
+	"image/png"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -128,7 +128,7 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 	w.Write([]byte(imageCode))
 }
 
-func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file baased on db ID
+func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file based on db ID
 	fmt.Println("Get image")
 
 	//Authenticate request
@@ -148,7 +148,7 @@ func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image 
 
 	//Get from db
 	if err := database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image).Error; err != nil { //If image does not exist
-		w.WriteHeader(http.StatusBadRequest) // TODO: go through all http codes to make sure they are right. This one is different than the delete not found, which returns 404
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 	filename := image.Token + image.Timestamp + image.Extension
@@ -198,11 +198,16 @@ func ExistingDecode(w http.ResponseWriter, r *http.Request) { // decodes an imag
 		return
 	}
 
-	// TODO: decode image
-	fmt.Println(fileBytes[0])
+	// now actually decode image
+	imageText, err := utils.DecodeImageBytes(bytes.NewBuffer(fileBytes))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
+	w.Header().Set("Content-Type", "application/text; charset=UTF-8") // CHANGED TO PLAIN TEXT
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode("imageCode")
+	w.Write([]byte(imageText))
 
 }
 
