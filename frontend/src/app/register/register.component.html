@@ -1,0 +1,95 @@
+<style>
+    .app-container{
+        text-align: center;
+        font-size: 20px;
+        color: black;
+        position: relative;
+    }
+
+    .form-label{
+        margin-right: 2%;
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        position: relative;
+    }
+
+    .mat-card {
+        margin: 2em auto;
+        text-align: center;
+        position: relative;
+    }
+
+    .mat-form-field {
+        display: block;
+    }
+
+    #rcorners2 {
+        border-radius: 25px;
+        border: 5px solid rgb(62, 64, 66);
+        padding: 20px;
+        width: 300px;
+        height: 300px;
+        text-align: center;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        background-color:rgb(49, 52, 56);
+    }
+
+
+
+
+
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+
+<div id="rcorners2" style="position: center;">
+    <div class="app-container" [ngClass]="{ 'bg-light': user }">
+        <div class="card">
+            <h4 class="card-header" style="margin-top:0%; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; color:white;">REGISTER</h4>
+                <div class="card-body">
+        
+                <div>
+
+
+
+                    <div class="mb-3">
+                        <mat-form-field class="example-full-width">
+                            <label class="form-label" style="color: white;">Username</label>
+                          <input matInput [(ngModel)]="registerUsername" type="username" placeholder="Username" [ngClass]="{ 'is-invalid': submitted && loginUsername }" style="color: white;"/>
+                        </mat-form-field>
+                        <!-- errors -->
+                        
+                    </div>
+    
+                    <div class="mb-3">
+                        <mat-form-field class="example-full-width">
+                            <label class="form-label" style="color: white;">Password </label>
+                            <input matInput [(ngModel)]="registerPassword" type="password" placeholder="Password" style="color: white;"/>
+                        </mat-form-field>
+                        <!-- errors -->
+                        
+                    </div>
+
+                    <div *ngIf="submitted && error" class="invalid-feedback" style="font-size: 10px; margin-top: -10px; margin-left:40px; color:white; position:absolute;">
+                        Username is taken.
+                    </div>
+    
+                    <div id="buttons">
+                        <!-- load button -->
+                        <button [disabled]="loading" mat-raised-button color="primary" (click)="register()" style="color: white; margin-top: 6%; margin-right: 0%; background-color: rgb(127, 136, 147); font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                            REGISTER</button>
+                        <button mat-raised-button color="primary" (click)="goToPage('signin')" style="color: white; margin-top: 6%; margin-LEFT: 5%; background-color: rgb(127, 136, 147); font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">RETURN TO LOGIN</button>
+    
+                        
+                    </div>
+    
+    
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+

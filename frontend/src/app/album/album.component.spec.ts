@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImagebtnsComponent } from './imagebtns.component';
+import { AlbumComponent } from './album.component';
 
-describe('ImagebtnsComponent', () => {
-  let component: ImagebtnsComponent;
-  let fixture: ComponentFixture<ImagebtnsComponent>;
+describe('AlbumComponent', () => {
+  let component: AlbumComponent;
+  let fixture: ComponentFixture<AlbumComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImagebtnsComponent ]
+      declarations: [ AlbumComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ImagebtnsComponent);
+    fixture = TestBed.createComponent(AlbumComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

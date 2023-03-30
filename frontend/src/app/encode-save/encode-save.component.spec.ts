@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextboxComponent } from './textbox.component';
+import { EncodeSaveComponent } from './encode-save.component';
 
-describe('TextboxComponent', () => {
-  let component: TextboxComponent;
-  let fixture: ComponentFixture<TextboxComponent>;
+describe('EncodeSaveComponent', () => {
+  let component: EncodeSaveComponent;
+  let fixture: ComponentFixture<EncodeSaveComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TextboxComponent ]
+      declarations: [ EncodeSaveComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TextboxComponent);
+    fixture = TestBed.createComponent(EncodeSaveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

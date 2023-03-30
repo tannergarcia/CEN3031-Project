@@ -1,29 +1,22 @@
-<!--<h1 mat-dialog-title>Hi {{data.message}}</h1>
-<div mat-dialog-content>
-  <mat-form-field appearance="fill">
-    <mat-label>Write here...</mat-label>
-    <input matInput>
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data.message" cdkFocusInitial>Encode</button>
-</div>
--->
 
-
-<mat-dialog-content [formGroup]="form">
+<div class="dialogwin" fxLayout="column">
+  <mat-dialog-content>
   
-    <mat-form-field>
+    <mat-form-field color="accent">
         <input matInput
               readonly="true"
               value = {{test}}
         >
     </mat-form-field>
  
-</mat-dialog-content>
+  </mat-dialog-content>
 
-<mat-dialog-actions>
-    <button mat-raised-button class="mat-raised-button"(click)="close()">Close</button>
-    <button mat-raised-button class="mat-raised-button mat-primary"(click)="save()">Save</button>
-</mat-dialog-actions>
+  <mat-dialog-actions fxFlex="" fxLayout="row" fxLayoutGap="">
+      <div fxFlex=""></div>
+      <button mat-raised-button class="mat-raised-button"(click)="close()">Close</button>
+      <button mat-raised-button class="mat-raised-button" color="accent" (click)="save()">Save</button>
+  </mat-dialog-actions>
+</div>
+
+
+

@@ -1,0 +1,38 @@
+<style>
+    #buttons{
+        position: absolute;
+        top: 30px;
+        right: 50px;
+    }
+
+
+</style>
+
+<!--<div style="text-align: center;">
+    <p>Welcome back username!</p>
+    <p>Need to pull username from database.</p>    
+</div>-->
+
+
+<div>
+    <mat-tab-group  [backgroundColor]="undefined" headerPosition="below" mat-stretch-tabs="false" mat-align-tabs="start" deactivateInkBar="true" disableRipple="true" disablePagination="true" [(selectedIndex)]=classRef.selectedIndex>
+        <mat-tab disabled="true">
+            <app-album></app-album>
+        </mat-tab>
+        <mat-tab disabled="true">
+            <app-upload></app-upload>
+        </mat-tab>
+    </mat-tab-group>
+    
+    <router-outlet></router-outlet>
+</div>
+
+<div fxLayoutGap="10" id="buttons">
+    <button mat-button (click)="Change()">
+        {{text}}
+      </button>
+  
+      <button mat-button (click)="goToPage('signin')" >
+        Logout
+      </button>
+</div>

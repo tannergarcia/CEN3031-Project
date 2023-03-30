@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToolbarComponent } from './toolbar.component';
+import { EncodeCloseComponent } from './encode-close.component';
 
-describe('ToolbarComponent', () => {
-  let component: ToolbarComponent;
-  let fixture: ComponentFixture<ToolbarComponent>;
+describe('EncodeCloseComponent', () => {
+  let component: EncodeCloseComponent;
+  let fixture: ComponentFixture<EncodeCloseComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ToolbarComponent ]
+      declarations: [ EncodeCloseComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ToolbarComponent);
+    fixture = TestBed.createComponent(EncodeCloseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
