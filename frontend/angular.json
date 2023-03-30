@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "PhotoBomb": {
+    "AngGoLogin": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/photo-bomb",
+            "outputPath": "dist/ang-go-login",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -61,10 +61,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "PhotoBomb:build:production"
+              "browserTarget": "AngGoLogin:build:production",
+              "proxyConfig": "src/proxy.conf.json"
             },
             "development": {
-              "browserTarget": "PhotoBomb:build:development"
+              "browserTarget": "AngGoLogin:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -72,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "PhotoBomb:build"
+            "browserTarget": "AngGoLogin:build"
           }
         },
         "test": {
@@ -98,6 +100,6 @@
     }
   },
   "cli": {
-    "analytics": "9a2908ee-05a5-4808-a8a0-303949b6ac21"
+    "analytics": false
   }
 }
