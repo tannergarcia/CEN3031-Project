@@ -227,8 +227,8 @@ func TestGetImageByID(t *testing.T) {
 
 		GetImageById(responseRecorder, request)
 
-		if responseRecorder.Code != http.StatusBadRequest {
-			t.Errorf("Want status '%d', got '%d'", http.StatusBadRequest, responseRecorder.Code)
+		if responseRecorder.Code != http.StatusNotFound {
+			t.Errorf("Want status '%d', got '%d'", http.StatusNotFound, responseRecorder.Code)
 		}
 	})
 	t.Run("bad image", func(t *testing.T) {
@@ -245,8 +245,8 @@ func TestGetImageByID(t *testing.T) {
 
 		GetImageById(responseRecorder, request)
 
-		if responseRecorder.Code != http.StatusBadRequest {
-			t.Errorf("Want status '%d', got '%d'", http.StatusBadRequest, responseRecorder.Code)
+		if responseRecorder.Code != http.StatusNotFound {
+			t.Errorf("Want status '%d', got '%d'", http.StatusNotFound, responseRecorder.Code)
 		}
 	})
 	t.Run("correct request", func(t *testing.T) {
@@ -259,7 +259,7 @@ func TestGetImageByID(t *testing.T) {
 		request.AddCookie(validCookie)
 
 		q := request.URL.Query()
-		q.Add("timestamp", "1677710640748805500") // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
+		q.Add("timestamp", "1680131801653639600") // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
 		request.URL.RawQuery = q.Encode()
 
 		GetImageById(responseRecorder, request)
@@ -438,7 +438,7 @@ func TestDeleteImageByID(t *testing.T) {
 	t.Run("correct request", func(t *testing.T) {
 
 
-		imageRequest, _ := json.Marshal(map[string]string{"timestamp": "1677714750832795800"}) // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
+		imageRequest, _ := json.Marshal(map[string]string{"timestamp": "1680131768323807900"}) // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
 
 
 		request := httptest.NewRequest(http.MethodDelete, "/delete", strings.NewReader(string(imageRequest)))
