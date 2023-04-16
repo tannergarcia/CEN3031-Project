@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/tannergarcia/PhotoBomb/backend/pkg/controllers"
-	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
 	"log"
 	"net/http"
+
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/controllers"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
 
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/auth"
 
@@ -51,5 +52,5 @@ func RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/decode", controllers.ExistingDecode).Methods("GET")      //Decode existing
 	r.HandleFunc("/download/", controllers.GetImageById).Methods("GET")
 	r.HandleFunc("/download/list/", controllers.GetAllImages).Methods("GET")
-	r.HandleFunc("/delete", controllers.DeleteImageById).Methods("DELETE")
+	r.HandleFunc("/delete/", controllers.DeleteImageById).Methods("DELETE")
 }
