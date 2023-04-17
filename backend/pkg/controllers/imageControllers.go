@@ -122,9 +122,9 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/text; charset=UTF-8") // CHANGED TO PLAIN TEXT
+	w.Header().Set("Content-Type", "application/JSON; charset=UTF-8") // CHANGED TO JSON
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(imageCode))
+	json.NewEncoder(w).Encode(imageCode)
 }
 
 func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file based on db ID
@@ -208,9 +208,9 @@ func ExistingDecode(w http.ResponseWriter, r *http.Request) { // decodes an imag
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/text; charset=UTF-8") // CHANGED TO PLAIN TEXT
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8") // CHANGED TO JSON
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(imageText))
+	json.NewEncoder(w).Encode(imageText)
 
 }
 
