@@ -32,6 +32,8 @@ import { EncodeSaveComponent } from './encode-save/encode-save.component';
 import { EncodeCloseComponent } from './encode-close/encode-close.component';
 import { DecodeSaveComponent } from './decode-save/decode-save.component';
 import { PhotoComponent } from './photo/photo.component';
+import { AlbumDecodeComponent } from './album-decode/album-decode.component';
+import { ExistDecodeComponent } from './exist-decode/exist-decode.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { PhotoComponent } from './photo/photo.component';
     EncodeSaveComponent,
     EncodeCloseComponent,
     DecodeSaveComponent,
-    PhotoComponent
+    PhotoComponent,
+    AlbumDecodeComponent,
+    ExistDecodeComponent
   ],
   imports: [
     BrowserModule,
@@ -70,6 +74,7 @@ import { PhotoComponent } from './photo/photo.component';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AlbumDecodeComponent, PhotoComponent],
 })
 export class AppModule { }

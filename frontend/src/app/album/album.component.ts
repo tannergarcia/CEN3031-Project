@@ -30,17 +30,13 @@ export class AlbumComponent {
 
   openPhoto() {
     const dialogConfig = new MatDialogConfig();
-    
 
     let dialogRef = this.dialog.open(PhotoComponent, {disableClose: true, data: this.photoURL, 
-    width: '800px',});
+    width: '600px',});
     dialogRef.componentInstance.service = this;
   }
 
   ngOnInit() {
-    this.updateImages();
-  }
-  ngOnChanges(){
     this.updateImages();
   }
 

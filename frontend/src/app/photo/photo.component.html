@@ -1,16 +1,18 @@
+
 <div fxLayout="column">
     <mat-dialog-content>
 
-        <mat-form-field fxFlex="" appearance="fill">
-            <img class="tile-image" [src]="photoURL" layout-fill/> 
+        <mat-form-field fxFlexAlign="center" fxFlex="" appearance="fill" >
+            <img class="tile-image" [src]="photoURL" layout-fill [hidden]="!hide"/> 
         </mat-form-field>
-    
+        <p [hidden]="hide">{{imageText}}</p>
     </mat-dialog-content>
     
-    <mat-dialog-actions fxFlex="" fxLayout="row" fxLayoutGap="10">
-        <button mat-raised-button class="mat-raised-button"(click)="Decode()" >Decode</button>         
+    <mat-dialog-actions fxFlexAlign="center" fxFlex="" fxLayout="row" fxLayoutGap="10"> 
+        
         <button mat-raised-button color="warn" class="mat-raised-button"(click)="Delete(); Update()">Delete</button>
         <button mat-raised-button color="accent"class="mat-raised-button"(click)="Download()" >Download</button>
+        <button mat-raised-button color="accent" class="mat-raised-button"(click)="Decode1()">🔓︎ Decode</button>
         <button mat-raised-button color="accent"class="mat-raised-button"(click)="Close()" >Close</button>
     </mat-dialog-actions>
 </div>

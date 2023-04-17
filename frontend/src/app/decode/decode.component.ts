@@ -7,10 +7,6 @@ import {HttpClientModule} from '@angular/common/http';
 import { DecodeSaveComponent } from '../decode-save/decode-save.component';
 
 
-export interface DialogData {
-  message?: string;
-}
-
 @Component({
   selector: 'app-decode',
   templateUrl: './decode.component.html',
@@ -20,6 +16,8 @@ export interface DialogData {
 export class DecodeComponent implements OnInit{
   test!: string;
   public service!: UploadComponent;
+  input = "";
+  message! :string;
   
   constructor(
     public dialog: MatDialogRef<DecodeComponent>, private dialogSave: MatDialog
@@ -33,6 +31,15 @@ export class DecodeComponent implements OnInit{
       )
       
     }
+
+  decodesave(){
+    this.service.formData.delete("imagetext");
+    this.service.formData.append("imagetext", this.input);
+    this.service.getEncoded().subscribe((rslt:Object)=>{
+      this.message = JSON.stringify(rslt);
+      console.log(this.message)
+    }) 
+  }
 
   save() {
     const dialogConfig = new MatDialogConfig();
