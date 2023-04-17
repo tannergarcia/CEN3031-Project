@@ -49,7 +49,7 @@ func RegisterRoutes(r *mux.Router) {
 	//Image upload
 	r.HandleFunc("/upload/encode", controllers.ImageCreate).Methods("POST")
 	r.HandleFunc("/upload/decode", controllers.ImageDecode).Methods("POST") //Decode new
-	r.HandleFunc("/decode", controllers.ExistingDecode).Methods("GET")      //Decode existing
+	r.HandleFunc("/decode/", controllers.ExistingDecode).Methods("GET")     //Decode existing
 	r.HandleFunc("/download/", controllers.GetImageById).Methods("GET")
 	r.HandleFunc("/download/list/", controllers.GetAllImages).Methods("GET")
 	r.HandleFunc("/delete/", controllers.DeleteImageById).Methods("DELETE")
