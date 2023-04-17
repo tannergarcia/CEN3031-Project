@@ -17,7 +17,10 @@
 <div>
     <mat-tab-group  [backgroundColor]="undefined" headerPosition="below" mat-stretch-tabs="false" mat-align-tabs="start" deactivateInkBar="true" disableRipple="true" disablePagination="true" [(selectedIndex)]=classRef.selectedIndex>
         <mat-tab disabled="true">
-            <app-album></app-album>
+            <ng-template matTabContent>
+                <app-album></app-album>
+            </ng-template>
+            
         </mat-tab>
         <mat-tab disabled="true">
             <app-upload></app-upload>
@@ -29,7 +32,7 @@
 
 <div fxLayoutGap="10" id="buttons">
     <button mat-button (click)="Change()">
-        {{text}}
+        {{classRef.text}}
       </button>
   
       <button mat-button (click)="goToPage('signin')" >

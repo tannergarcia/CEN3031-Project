@@ -11,13 +11,12 @@ import { RegisterComponent } from './register/register.component';
 //import { AlertComponent } from './warnings';
 import { MatCardModule } from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatFormFieldControl, MatFormFieldModule} from '@angular/material/form-field';
 import { WarningsComponent } from './warnings/warnings.component';
 import {MatInputModule} from '@angular/material/input';
 
 //encode decode
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
@@ -32,6 +31,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { EncodeSaveComponent } from './encode-save/encode-save.component';
 import { EncodeCloseComponent } from './encode-close/encode-close.component';
 import { DecodeSaveComponent } from './decode-save/decode-save.component';
+import { PhotoComponent } from './photo/photo.component';
+import { AlbumDecodeComponent } from './album-decode/album-decode.component';
+import { ExistDecodeComponent } from './exist-decode/exist-decode.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,10 @@ import { DecodeSaveComponent } from './decode-save/decode-save.component';
     AlbumComponent,
     EncodeSaveComponent,
     EncodeCloseComponent,
-    DecodeSaveComponent
+    DecodeSaveComponent,
+    PhotoComponent,
+    AlbumDecodeComponent,
+    ExistDecodeComponent
   ],
   imports: [
     BrowserModule,
@@ -69,6 +74,7 @@ import { DecodeSaveComponent } from './decode-save/decode-save.component';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AlbumDecodeComponent, PhotoComponent],
 })
 export class AppModule { }

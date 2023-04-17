@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { EncodeComponent } from '../encode/encode.component';
 import { ProfileComponent } from '../profile/profile.component';
+import { AlbumComponent } from '../album/album.component';
 
 @Component({
   selector: 'app-encode-save',
@@ -19,9 +20,13 @@ export class EncodeSaveComponent {
   closeAll() {
     this.dialog.close();
     this.service.selectedIndex = 0;
+    this.service.text = "New";
     this.encodeComp.service.hide = true;
     this.encodeComp.service.fileName = '';
+    
     this.encodeComp.service.formData = new FormData;
+    
+
   }
 
   close() {

@@ -16,7 +16,10 @@ import { imageObj } from '../album/imageObj';
   styleUrls: ['./upload.component.css']
 })
 
+
 export class UploadComponent {
+  
+
   fileName = '';
   ipAddy = 'localhost';
   formData = new FormData();
@@ -24,6 +27,8 @@ export class UploadComponent {
   message!: string;
   public displayImageList= [""];
   public imageTest!: imageObj[]
+
+  
 
   constructor(private httpClient: HttpClient, private dialog: MatDialog) {
     hide: true;

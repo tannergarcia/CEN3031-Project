@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,28 +7,30 @@ import { Router } from '@angular/router';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent {
+export class ProfileComponent{
 
   static selectedIndex: number;
   public classRef = ProfileComponent;
-  public text = "New"
+  public static text = "New"
+  
 
   constructor(
     private httpClient: HttpClient,
     private router: Router
   ){
     ProfileComponent.selectedIndex = 0;
+    ProfileComponent.text = "New";
   }
 
   Change(){
     
     if (this.classRef.selectedIndex == 0){
       this.classRef.selectedIndex = 1;
-      this.text = "Album"
+      ProfileComponent.text = "Album"
     }
     else{
       this.classRef.selectedIndex = 0;
-      this.text = "New"
+      ProfileComponent.text = "New"
     }
     
   }
