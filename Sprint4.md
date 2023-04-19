@@ -1,5 +1,43 @@
-### New User Stories
+### All + New User Stories
+<details>
+  
+ As a user, I want to be able to download photos I have encoded/decoded so that I can send them to others
+ 
+ As an organized person, I want to be able to delete photos so that there is less clutter
+ 
+ As an secretive/private person, I want to keep encoded messages hidden, so that others can not see them
+ 
+  As a user, I want to see all the photos I have uploaded so that I can save them on the website using my account.
 
+  As a user, I want to log into my account so that I can view my personalized dashboard
+
+ As a writer, I want to view decoded images so that I can read my past stories
+
+ As a friend, I want to view decoded images so that I can read my friend's encoded messages
+
+ As an artist, I want to hide watermarks in my digital art, so that my art can be identified.
+
+ As a traveler, I want to be able to store metadata of where and when they were taken in photos, so that it will not disappear when I transfer photos from one place to another.
+
+ As someone who keeps a diary, I want to be able to keep my entries private, so that only I will be able to read them.
+
+ As a baker/cook, I want to keep recipes in one place, so that I do not lose track of them or forget them.
+
+ As someone with their own photos on their computer, I want to be able to upload my own photos, so that I can hide messages in personal photos.
+
+ As a social person, I want to be able to share photos with others, so that friends and family can see, decode, and read hidden messages hidden in them.
+
+ As a puzzle maker, I want to hide messages in photos, so puzzle solvers can decode them.
+
+ As a friend, I want to send messages in a unique way, to entertain other friends.
+
+ As a person in a relationship, I want to send messages within photos to my significant other, to make them smile.
+
+ As a user, I want to be able to log in, so that I can access my photos securely.
+
+ As a user, I want to see a homepage, so that I know what the website does.
+ </details>
+ 
 
 ### Work Completed
 
@@ -8,7 +46,11 @@
 - TODO Update
 - Implemented proxy for frontend requests
 
-- The gallery now displays all of a users images in tiles
+- Album now updates when it is switched to be in view
+
+- Encode and decode both save images to the album
+
+- Photos in album can be interacted with (downloaded, decoded, deleted)
 
 - Tested login and registration interfaces for errors
 
