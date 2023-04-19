@@ -1,12 +1,11 @@
 ### New User Stories
 
-- As a user, I want to see all the photos I have uploaded so that I can save them on the website using my account.
-
 
 ### Work Completed
 
  #### Front-end:
-
+ 
+- TODO Update
 - Implemented proxy for frontend requests
 
 - The gallery now displays all of a users images in tiles
@@ -20,7 +19,7 @@
 
  #### Back-end:
 
-
+- TODO Update
 - Updated API Documentation
 
 - Implemented core image message encoding/decoding functionality
@@ -193,7 +192,7 @@ form enctype="multipart/form-data"
 </details>
 
 <details>
- <summary><code>GET</code> <code><b>/decode</b></code> Decode existing image</summary>
+ <summary><code>GET</code> <code><b>/decode/?timestamp={timestamp}</b></code> Decode existing image</summary>
 
 #### Parameters
 **Cookie authentication required**
@@ -310,7 +309,7 @@ form enctype="multipart/form-data"
 </details>
 
 <details>
- <summary><code>DELETE</code> <code><b>/delete</b></code> Delete an image</summary>
+ <summary><code>DELETE</code> <code><b>/delete/?timestamp={timestamp}</b></code> Delete an image</summary>
 
 #### Parameters
 **Cookie authentication required**
