@@ -44,6 +44,7 @@ func TestSignup(t *testing.T) {
 
 	// generate ran username for creating new user
 	userPayload, _ := json.Marshal(map[string]string{"password": "banana12", "username": genrandUsername()})
+	payload2, _ := json.Marshal(map[string]string{"password": "banana*#&", "username": genrandUsername()})
 
 	tt := []struct {
 		name       string
@@ -96,7 +97,7 @@ func TestSignup(t *testing.T) {
 		{
 			name:       "with symbols in password",
 			method:     http.MethodPost,
-			body:       `{"password":"banana*#&","username":"tanner"}`,
+			body:       string(payload2),
 			statusCode: http.StatusOK,
 		},
 		{

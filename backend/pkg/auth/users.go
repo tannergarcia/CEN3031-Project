@@ -13,15 +13,17 @@ import (
 	"github.com/google/uuid"
 	"github.com/microcosm-cc/bluemonday"
 	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/validator.v2"
+	"github.com/go-playground/validator/v10"
 )
 
 type Credentials struct {
-	Password string `json:"password"`
-	Username string `json:"username"`
+	Password string `json:"password" validate:"required,ascii,min=8,max=20"`
+	Username string `json:"username" validate:"required,alphanum,min=3,max=20"`
 }
 
 func Signup(w http.ResponseWriter, r *http.Request) {
+	validate := validator.New()
+
 	// Parse and decode the request body into a new `Credentials` instance
 	creds := Credentials{}
 	err := json.NewDecoder(r.Body).Decode(&creds)
@@ -33,14 +35,9 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	
 	// check against username and password requirements
-	p := bluemonday.StrictPolicy()
-	if errr := validator.Validate(creds.Username); errr != nil {
-		// username does not meet requirements
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if errr := validator.Validate(creds.Password); errr != nil {
-		// password does not meet requirements
+	p := bluemonday.UGCPolicy()
+	if errr := validate.Struct(creds); errr != nil {
+		// username/password does not meet requirements
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
