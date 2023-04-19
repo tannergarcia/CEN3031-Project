@@ -11,7 +11,9 @@ import (
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/models"
 
 	"github.com/google/uuid"
+	"github.com/microcosm-cc/bluemonday"
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/validator.v2"
 )
 
 type Credentials struct {
@@ -29,12 +31,21 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// check for missing user/password
-	if creds.Username == "" || creds.Password == "" {
-		// missing username or password
+	
+	// check against username and password requirements
+	p := bluemonday.StrictPolicy()
+	if errr := validator.Validate(creds.Username); errr != nil {
+		// username does not meet requirements
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	if errr := validator.Validate(creds.Password); errr != nil {
+		// password does not meet requirements
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	creds.Username = p.Sanitize(creds.Username)
+	creds.Password = p.Sanitize(creds.Password)
 
 	// check for dupe username
 	var foundUser models.User

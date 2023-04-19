@@ -13,7 +13,12 @@ require (
 
 require (
 	github.com/auyer/steganography v1.0.2 // indirect
+	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	github.com/gorilla/css v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.23 // indirect
+	golang.org/x/net v0.8.0 // indirect
+	gopkg.in/validator.v2 v2.0.1 // indirect
 )
