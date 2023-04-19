@@ -3,7 +3,6 @@ package auth
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -33,7 +32,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	// check for missing user/password
 	if creds.Username == "" || creds.Password == "" {
 		// missing username or password
-		// TODO: make username and password requirements
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -42,7 +40,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	var foundUser models.User
 	if err := database.UserInstance.Where("username = ?", creds.Username).First(&foundUser).Error; err == nil {
 		// username already exists
-		fmt.Println("User Exists")
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
@@ -58,7 +55,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Next, create a new user entry for the database
-	// TODO: check if username already exists
 
 	// ADD IN SESSION AND SESHEXP
 	newUser := models.User{Username: creds.Username, HashWord: string(hashedPassword)}
@@ -75,7 +71,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// We reach this point if the credentials we correctly stored in the database, and the default status of 200 is sent back
-	fmt.Println("User Signed Up")
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -93,7 +88,6 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	// check for missing user/password
 	if creds.Username == "" || creds.Password == "" {
 		// missing username or password
-		// TODO: make username and password requirements
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -131,90 +125,10 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 		Value:   sessionToken,
 		Expires: expiresAt,
 	})
-	fmt.Println("User Signed In")
 	w.WriteHeader(http.StatusOK)
 }
 
-/*
-func Welcome(w http.ResponseWriter, r *http.Request) {
-	// We can obtain the session token from the requests cookies, which come with every request
-	c, err := r.Cookie("session_token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			// If the cookie is not set, return an unauthorized status
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		// For any other type of error, return a bad request status
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	sessionToken := c.Value
 
-	// We then get the name of the user from our session map, where we set the session token
-	userSession, exists := sessions[sessionToken]
-	if !exists {
-		// If the session token is not present in session map, return an unauthorized error
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	if userSession.isExpired() {
-		delete(sessions, sessionToken)
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	// Finally, return the welcome message to the user
-	w.Write([]byte(fmt.Sprintf("Welcome %s!", userSession.username)))
-}
-*/
-
-/*
-func Refresh(w http.ResponseWriter, r *http.Request) {
-	// (BEGIN) The code from this point is the same as the first part of the `Welcome` route
-	c, err := r.Cookie("session_token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	sessionToken := c.Value
-
-	userSession, exists := sessions[sessionToken]
-	if !exists {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	if userSession.isExpired() {
-		delete(sessions, sessionToken)
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	// (END) The code until this point is the same as the first part of the `Welcome` route
-
-	// If the previous session is valid, create a new session token for the current user
-	newSessionToken := uuid.NewString()
-	expiresAt := time.Now().Add(120 * time.Second)
-
-	// Set the token in the session map, along with the user whom it represents
-	sessions[newSessionToken] = session{
-		username: userSession.username,
-		expiry:   expiresAt,
-	}
-
-	// Delete the older session token
-	delete(sessions, sessionToken)
-
-	// Set the new token as the users `session_token` cookie
-	http.SetCookie(w, &http.Cookie{
-		Name:    "session_token",
-		Value:   newSessionToken,
-		Expires: time.Now().Add(120 * time.Second),
-	})
-}
-*/
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	c, err := r.Cookie("session_token")
@@ -249,14 +163,12 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		Value:   "",
 		Expires: time.Now(),
 	})
-	fmt.Println("User logged out")
 	w.WriteHeader(http.StatusOK)
 }
 
 func GetUser(r *http.Request) (string, error) {
 	cooky, err := r.Cookie("session_token")
 	if err != nil {
-		fmt.Println("Error")
 		if err == http.ErrNoCookie {
 			return "-1", errors.New("no cookie")
 		}
