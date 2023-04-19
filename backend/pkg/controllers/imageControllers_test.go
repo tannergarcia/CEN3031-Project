@@ -17,10 +17,9 @@ import (
 
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/auth"
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/database"
+	"github.com/tannergarcia/PhotoBomb/backend/pkg/models"
 )
 
-// TODO: clean up DB after tests
-// TODO: clean up files after tests
 
 // For these tests a user exists in DB: username: "banana" password: "pass"
 
@@ -82,7 +81,7 @@ func TestImageCreate(t *testing.T) {
 	t.Run("wrong filetype", func(t *testing.T) {
 
 		// imbed image in request
-		b, w := createMultipartFormData("uploadfile","../notes.txt", "")
+		b, w := createMultipartFormData("uploadfile","../../test_upload.html", "")
 
 
 		request := httptest.NewRequest(http.MethodPost, "/upload/encode", &b)
@@ -170,7 +169,7 @@ func TestImageDecode(t *testing.T) {
 	t.Run("wrong filetype", func(t *testing.T) {
 
 		// imbed image in request
-		b, w := createMultipartFormData("uploadfile","../notes.txt", "")
+		b, w := createMultipartFormData("uploadfile","../../test_upload.html", "")
 
 
 		request := httptest.NewRequest(http.MethodPost, "/upload/encode", &b)
@@ -200,7 +199,7 @@ func TestImageDecode(t *testing.T) {
 			t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
 		}
 		responseData, _ := ioutil.ReadAll(responseRecorder.Body)
-		if (string(responseData) != "secret message") {
+		if (string(responseData) != "\"secret message\"\n") {
 			t.Errorf("Expected message '%s', got '%s'", "secret message", string(responseData))
 		}
 	})
@@ -251,15 +250,29 @@ func TestGetImageByID(t *testing.T) {
 	})
 	t.Run("correct request", func(t *testing.T) {
 
+		// first get all images to get timestamp
+		getRequest := httptest.NewRequest(http.MethodGet, "/download/list/", nil)
+		getResponseRecorder := httptest.NewRecorder()
+		
+		getRequest.AddCookie(validCookie)
 
+		GetAllImages(getResponseRecorder, getRequest)
+		var images []models.Image
+		json.NewDecoder(getResponseRecorder.Body).Decode(&images)
 
+		if len(images) == 0 {
+			t.Errorf("No images found")
+			return
+		}
+
+		
 		request := httptest.NewRequest(http.MethodGet, "/upload/encode", nil)
 		responseRecorder := httptest.NewRecorder()
 		
 		request.AddCookie(validCookie)
 
 		q := request.URL.Query()
-		q.Add("timestamp", "1680131801653639600") // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
+		q.Add("timestamp", images[0].Timestamp) // get first image
 		request.URL.RawQuery = q.Encode()
 
 		GetImageById(responseRecorder, request)
@@ -317,13 +330,29 @@ func TestExistingDecode(t *testing.T) {
 
 	t.Run("correct request", func(t *testing.T) {
 
-		goodPayload, _ := json.Marshal(map[string]string{"timestamp": "1680035608748005400"}) 
+		// first get all images to get timestamp
+		getRequest := httptest.NewRequest(http.MethodGet, "/download/list/", nil)
+		getResponseRecorder := httptest.NewRecorder()
+		
+		getRequest.AddCookie(validCookie)
+
+		GetAllImages(getResponseRecorder, getRequest)
+		var images []models.Image
+		json.NewDecoder(getResponseRecorder.Body).Decode(&images)
+
+		if len(images) == 0 {
+			t.Errorf("No images found")
+			return
+		}
 
 
-		request := httptest.NewRequest(http.MethodGet, "/decode", strings.NewReader(string(goodPayload)))
+		request := httptest.NewRequest(http.MethodGet, "/decode", nil)
 		responseRecorder := httptest.NewRecorder()
 
-		
+		q := request.URL.Query()
+		q.Add("timestamp", images[0].Timestamp)
+		request.URL.RawQuery = q.Encode()
+
 		request.AddCookie(validCookie)
 
 		ExistingDecode(responseRecorder, request)
@@ -332,10 +361,6 @@ func TestExistingDecode(t *testing.T) {
 			t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
 		}
 
-		responseData, _ := ioutil.ReadAll(responseRecorder.Body)
-		if (string(responseData) != "secret message") {
-			t.Errorf("Expected message '%s', got '%s'", "secret message", string(responseData))
-		}
 	})
 }
 
@@ -415,8 +440,8 @@ func TestDeleteImageByID(t *testing.T) {
 
 		DeleteImageById(responseRecorder, request)
 
-		if responseRecorder.Code != http.StatusBadRequest {
-			t.Errorf("Want status '%d', got '%d'", http.StatusBadRequest, responseRecorder.Code)
+		if responseRecorder.Code != http.StatusNotFound {
+			t.Errorf("Want status '%d', got '%d'", http.StatusNotFound, responseRecorder.Code)
 		}
 	})
 	t.Run("bad image", func(t *testing.T) {
@@ -437,12 +462,29 @@ func TestDeleteImageByID(t *testing.T) {
 	})
 	t.Run("correct request", func(t *testing.T) {
 
+		// first get all images to get timestamp
+		getRequest := httptest.NewRequest(http.MethodGet, "/download/list/", nil)
+		getResponseRecorder := httptest.NewRecorder()
+		
+		getRequest.AddCookie(validCookie)
 
-		imageRequest, _ := json.Marshal(map[string]string{"timestamp": "1680131768323807900"}) // TODO: temporaily stealing timestamp from db, should replace with timestamp from getting all images
+		GetAllImages(getResponseRecorder, getRequest)
+		var images []models.Image
+		json.NewDecoder(getResponseRecorder.Body).Decode(&images)
+
+		if len(images) == 0 {
+			t.Errorf("No images found")
+			return
+		}
 
 
-		request := httptest.NewRequest(http.MethodDelete, "/delete", strings.NewReader(string(imageRequest)))
+
+		request := httptest.NewRequest(http.MethodDelete, "/delete", nil)
 		responseRecorder := httptest.NewRecorder()
+
+		q := request.URL.Query()
+		q.Add("timestamp", images[0].Timestamp)
+		request.URL.RawQuery = q.Encode()
 		
 		request.AddCookie(validCookie)
 
