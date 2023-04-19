@@ -52,10 +52,16 @@ export class LoginComponent {
     }).subscribe((response: any) => {
       console.log("login");
       console.log(response);
+      const cookieResponse = response.session_token + "=" + response.sessionToken + "; Path=/; Expires=" + response.expiresAt + ";"
+      console.log(cookieResponse);
+
+
+      document.cookie = cookieResponse
+
       if(response || 'User Signed In'){
         
         //removed, not jwt currently
-        //localStorage.setItem('token', response.jwt)
+        //('token', response.jwt)
         //this.router.navigate(['profile'])
         
       }

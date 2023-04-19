@@ -125,12 +125,20 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 	database.UserInstance.Model(&foundUser).Update("Session", sessionToken)
 	database.UserInstance.Model(&foundUser).Update("SeshExp", expiresAt)
 
+	//Construct object
+	var currentCookie models.CookieModel
+	currentCookie.Name = "session_token"
+	currentCookie.Value = sessionToken
+	currentCookie.Expires = expiresAt.String()
+
 	// Finally, we set the client cookie for "session_token" as the session token we just generated
 	http.SetCookie(w, &http.Cookie{
 		Name:    "session_token",
 		Value:   sessionToken,
 		Expires: expiresAt,
 	})
+	json.NewEncoder(w).Encode(currentCookie)
+
 	fmt.Println("User Signed In")
 	w.WriteHeader(http.StatusOK)
 }
