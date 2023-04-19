@@ -74,7 +74,7 @@
                 <div class="mb-3">
                     <mat-form-field class="example-full-width">
                         <label class="form-label" style="color: white;">Password </label>
-                        <input matInput [(ngModel)]="loginPassword" type="password" placeholder="Password" style="color: white;"/>
+                        <input matInput [(ngModel)]="loginPassword" [type]="show ? 'text' : 'password'" placeholder="Password" style="color: white;"/>
                     </mat-form-field>
                     <!-- errors -->
 
