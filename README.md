@@ -13,3 +13,26 @@ Eric Truong
 Tanner Garcia
 
 Dominik Kapuscinski
+
+
+## Requirements
+- Go (project built on 1.19.5)
+- Angular
+- MySQL
+
+## Usage
+First clone the project locally
+```
+git clone https://github.com/tannergarcia/PhotoBomb
+```
+Next, start a MySQL instance.
+Ensure that 2 databases exist: images and users
+Navigate to the backend/cmd directory and start the backend go server
+```
+go run .\main.go
+```
+In a separate terminal, navigate to the frontend folder and start the angular application
+```
+ng serve
+```
+The application is now running.  Navigate to the provided link in your web browser to view it.
