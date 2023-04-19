@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { WarningsService } from '../warnings/warnings.service';
+import { StorageService } from '../authweb/storage.service';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +13,6 @@ import { WarningsService } from '../warnings/warnings.service';
 })
 export class LoginComponent {
   isLogin: boolean = false
-  registerUsername: string | null = null
-  registerPassword: string | null = null
   loginUsername: string | null = null
   loginPassword: string | null = null
 
@@ -23,12 +22,15 @@ export class LoginComponent {
   form!: FormGroup;
   error = false;
   timer = false;
+  
+  
 
   constructor(
     private httpClient: HttpClient,
     private router: Router,
     private alertService: WarningsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private storageService: StorageService
   ){ }
 
   ngOnInit() {
@@ -41,6 +43,12 @@ export class LoginComponent {
   get f() { 
     return this.form.controls; 
   }
+
+  userData: any = {
+    username: null,
+    password: null,
+  };
+
 
   login(){
     this.submitted = true;
@@ -55,18 +63,12 @@ export class LoginComponent {
       const cookieResponse = response.session_token + "=" + response.sessionToken + "; Path=/; Expires=" + response.expiresAt + ";"
       console.log(cookieResponse);
 
+      document.cookie = cookieResponse;
 
-      document.cookie = cookieResponse
+      this.userData.username = this.loginUsername;
+      this.userData.password = this.loginPassword;
+      this.storageService.saveUser(this.userData);
 
-      if(response || 'User Signed In'){
-        
-        //removed, not jwt currently
-        //('token', response.jwt)
-        //this.router.navigate(['profile'])
-        
-      }
-
-        //want to be able to username from database instead
       this.timer = true;
       this.router.navigate(['profile'])
       this.loginUsername = null
