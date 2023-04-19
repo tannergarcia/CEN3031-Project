@@ -26,7 +26,9 @@ First clone the project locally
 git clone https://github.com/tannergarcia/PhotoBomb
 ```
 Next, start a MySQL instance.
+
 Ensure that 2 databases exist: images and users
+
 Navigate to the backend/cmd directory and start the backend go server
 ```
 go run .\main.go
