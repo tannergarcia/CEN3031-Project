@@ -11,15 +11,19 @@ import (
 	"github.com/tannergarcia/PhotoBomb/backend/pkg/models"
 
 	"github.com/google/uuid"
+	"github.com/microcosm-cc/bluemonday"
 	"golang.org/x/crypto/bcrypt"
+	"github.com/go-playground/validator/v10"
 )
 
 type Credentials struct {
-	Password string `json:"password"`
-	Username string `json:"username"`
+	Password string `json:"password" validate:"required,ascii,min=8,max=20"`
+	Username string `json:"username" validate:"required,alphanum,min=3,max=20"`
 }
 
 func Signup(w http.ResponseWriter, r *http.Request) {
+	validate := validator.New()
+
 	// Parse and decode the request body into a new `Credentials` instance
 	creds := Credentials{}
 	err := json.NewDecoder(r.Body).Decode(&creds)
@@ -29,12 +33,16 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// check for missing user/password
-	if creds.Username == "" || creds.Password == "" {
-		// missing username or password
+	
+	// check against username and password requirements
+	p := bluemonday.UGCPolicy()
+	if errr := validate.Struct(creds); errr != nil {
+		// username/password does not meet requirements
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	creds.Username = p.Sanitize(creds.Username)
+	creds.Password = p.Sanitize(creds.Password)
 
 	// check for dupe username
 	var foundUser models.User
