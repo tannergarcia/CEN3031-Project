@@ -14,7 +14,6 @@ import (
 	"time"
 )
 
-// TODO: clean up DB after tests
 
 // For these tests a user exists in DB: username: "banana" password: "pass"
 
@@ -44,7 +43,7 @@ func genrandUsername() string {
 func TestSignup(t *testing.T) {
 
 	// generate ran username for creating new user
-	userPayload, _ := json.Marshal(map[string]string{"password": "banana", "username": genrandUsername()})
+	userPayload, _ := json.Marshal(map[string]string{"password": "banana12", "username": genrandUsername()})
 
 	tt := []struct {
 		name       string
@@ -61,13 +60,13 @@ func TestSignup(t *testing.T) {
 		{
 			name:       "with bad json",
 			method:     http.MethodPost,
-			body:       `{"pass":"banana","user":"jsidj"}`,
+			body:       `{"pass":"banana12","user":"jsidj"}`,
 			statusCode: http.StatusBadRequest,
 		},
 		{
 			name:       "with empty user",
 			method:     http.MethodPost,
-			body:       `{"password":"banana","username":""}`,
+			body:       `{"password":"banana12","username":""}`,
 			statusCode: http.StatusBadRequest,
 		},
 		{
@@ -75,6 +74,30 @@ func TestSignup(t *testing.T) {
 			method:     http.MethodPost,
 			body:       `{"password":"","username":"banana"}`,
 			statusCode: http.StatusBadRequest,
+		},
+		{
+			name:       "with too short user",
+			method:     http.MethodPost,
+			body:       `{"password":"banana12","username":"n"}`,
+			statusCode: http.StatusBadRequest,
+		},
+		{
+			name:       "with too short password",
+			method:     http.MethodPost,
+			body:       `{"password":"ba","username":"tanner"}`,
+			statusCode: http.StatusBadRequest,
+		},
+		{
+			name:       "with symbols in user",
+			method:     http.MethodPost,
+			body:       `{"password":"banana12","username":"&&#*#%@&"}`,
+			statusCode: http.StatusBadRequest,
+		},
+		{
+			name:       "with symbols in password",
+			method:     http.MethodPost,
+			body:       `{"password":"banana*#&","username":"tanner"}`,
+			statusCode: http.StatusOK,
 		},
 		{
 			name:       "normal signup",
@@ -107,7 +130,7 @@ func TestSignup(t *testing.T) {
 func TestSignin(t *testing.T) {
 
 	// unknown username
-	noUserPayload, _ := json.Marshal(map[string]string{"password": "banana", "username": genrandUsername()})
+	noUserPayload, _ := json.Marshal(map[string]string{"password": "banana12", "username": genrandUsername()})
 
 	// wrong password, existing user
 	badPassPayload, _ := json.Marshal(map[string]string{"password": "WRONG", "username": "banana"})
