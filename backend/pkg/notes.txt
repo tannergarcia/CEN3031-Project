@@ -1,7 +1,0 @@
-- unique users
-
-	- "Album" - get all images - dated (newest to oldest) - GET
-	- Specific image - GET
-	- "Upload/encode image" - POST (possibly immediatly download)
-	- "Delete from album" - DELETE
-	- "Decode image" - POST - response is decoded text
