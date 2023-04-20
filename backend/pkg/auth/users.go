@@ -142,7 +142,6 @@ func Signin(w http.ResponseWriter, r *http.Request) {
   
 	json.NewEncoder(w).Encode(currentCookie)
 
-	fmt.Println("User Signed In")
 
 	w.WriteHeader(http.StatusOK)
 }
