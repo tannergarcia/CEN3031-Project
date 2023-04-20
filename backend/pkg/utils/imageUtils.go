@@ -39,7 +39,6 @@ func AddImage(token string, filetype string, file *bytes.Buffer, w http.Response
 func DecodeImage(file *multipart.File) (string, error) {
 	newImage, _, err := image.Decode(*file)
 	if err != nil {
-		fmt.Println("mutlipartfile to image.Image failed")
 		return "", errors.New("failed converting multipartfile to image.Image")
 	}
 	
@@ -53,7 +52,6 @@ func DecodeImage(file *multipart.File) (string, error) {
 func DecodeImageBytes(file *bytes.Buffer) (string, error) {
 	newImage, _, err := image.Decode(file)
 	if err != nil {
-		fmt.Println("byte buffer to image.Image failed")
 		return "", errors.New("failed converting byte buffer to image.Image")
 	}
 
@@ -69,7 +67,7 @@ func WriteFile(fileName string, file *bytes.Buffer) {
 	f, err := os.Create("../uploads/"+fileName)
 
 	if err != nil {
-		fmt.Println("error creating file")
+		fmt.Println("error writing file")
 		return
 	}
 	file.WriteTo(f) // write buffer to file
