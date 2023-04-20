@@ -833,15 +833,30 @@ Front-end:
   
  #### Cypress Tests
  <details>
- <summary>1. Makes sure that user can upload images and interact with all elements of interface.</summary> 
+ <summary>1. Makes sure that user can interact with all elements of interface.</summary> 
+   -Sets Cookie
   
    -Goes to localhost
+  
+  -Goes to Interface
  
    -Uploads file from repository
+  
+  -Decodes, Cancels, Decodes, and Saves
+  
+  -Goes to Interface
+  
+  -Encodes, Cancels, Encodes, Saves
+  
+  -Clicks on Image
+  
+  -Decodes, Deletes
+  
+  -Clicks on Image
+  
+   -Decodes, Deletes
  
-   -Clicks on encode and exits
- 
-   -Clicks on decode and exits
+   
  </details>
 
  <details>
