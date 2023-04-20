@@ -1,7 +1,7 @@
 # Photo Bomb
 
 ## Project Description
-Through the use of image steganography, our website will allow users to hide text in their photos. Users will be able to create their own accounts where they upload images and write hidden messages which can serve the purpose of keeping diary or journal entries private, hiding information from plain sight, and creating hidden watermarks. Features will include users being able to share images and create passwords to better hide their secret messages.
+Through the use of image steganography, our website allows users to hide text in their photos. Users are able to create their own accounts where they upload images with embeded messages. These message can allow for keeping a private journal, hiding information in plain sight, and creating hidden watermarks.
 
 ## Group Members
 
@@ -13,3 +13,28 @@ Eric Truong
 Tanner Garcia
 
 Dominik Kapuscinski
+
+
+## Requirements
+- Go (project built on 1.19.5)
+- Angular
+- MySQL
+
+## Usage
+First clone the project locally
+```
+git clone https://github.com/tannergarcia/PhotoBomb
+```
+Next, start a MySQL instance.
+
+Ensure that 2 databases exist: images and users
+
+Navigate to the backend/cmd directory and start the backend go server
+```
+go run .\main.go
+```
+In a separate terminal, navigate to the frontend folder and start the angular application
+```
+ng serve
+```
+The application is now running.  Navigate to the provided link in your web browser to view it.

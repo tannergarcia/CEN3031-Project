@@ -26,20 +26,16 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 	//Authenticate request
 	userID, err := auth.GetUser(r)
 	if err != nil {
-		fmt.Println("Authenitication Error")
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	fmt.Println("Found user: " + userID)
 
-	//var errNew string
 
 	//Parse form data
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("uploadfile")
 
 	if err != nil {
-		fmt.Println("error")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -55,8 +51,6 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 		return
 	}
 
-	// TODO: check if text can fit into image
-	// maybe add option to encrypt this text?
 
 	fmt.Println(imageText)
 	var newImage image.Image
@@ -69,13 +63,12 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) { // uploads image into
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println("mutlipartfile to image.Image failed")
 		return
 	}
 	buf := new(bytes.Buffer)
 	if err = steganography.Encode(buf, newImage, []byte(imageText)); err != nil {
+		// this will also catch case where the image is too small to hold the text
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println("message encoding failed")
 		return
 	}
 
@@ -92,7 +85,6 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 
 	// does not require auth
 
-	//var errNew string
 
 	var imageCode string
 	//Parse form data
@@ -100,7 +92,6 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 	file, handler, err := r.FormFile("uploadfile")
 
 	if err != nil {
-		fmt.Println("error")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -128,7 +119,6 @@ func ImageDecode(w http.ResponseWriter, r *http.Request) { // takes an image fro
 }
 
 func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image file based on db ID
-	fmt.Println("Get image")
 
 	//Authenticate request
 	userID, err := auth.GetUser(r)
@@ -136,7 +126,6 @@ func GetImageById(w http.ResponseWriter, r *http.Request) { // returns an image 
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	fmt.Println("Found user: " + userID)
 
 	//Parse request
 	timestamp := r.URL.Query().Get("timestamp")
@@ -171,21 +160,12 @@ func ExistingDecode(w http.ResponseWriter, r *http.Request) { // decodes an imag
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	fmt.Println("Found user: " + userID)
 
-	fmt.Println("Get image")
 
 	//Parse request, get details of desired image
 	var image models.Image
 	timestamp := r.URL.Query().Get("timestamp")
 	image.Timestamp = timestamp
-	/*
-		err2 := json.NewDecoder(r.Body).Decode(&image)
-		if err2 != nil {
-			http.Error(w, err2.Error(), http.StatusBadRequest)
-			return
-		}
-	*/
 	image.Token = userID
 
 	//Get from db
@@ -221,9 +201,6 @@ func GetAllImages(w http.ResponseWriter, r *http.Request) { // returns all image
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	fmt.Println("Found user: " + userID)
-
-	fmt.Println("Get all images")
 
 	var image models.Image
 	image.Token = userID
@@ -254,22 +231,12 @@ func DeleteImageById(w http.ResponseWriter, r *http.Request) { // deletes an ima
 		return
 	}
 
-	fmt.Println("Found user: " + userID)
-
-	fmt.Println("Delete image")
 	//Parse request
 	var image models.Image
 	timestamp := r.URL.Query().Get("timestamp")
 	image.Timestamp = timestamp
-	/*
-		err2 := json.NewDecoder(r.Body).Decode(&image)
-		if err2 != nil {
-			http.Error(w, err2.Error(), http.StatusBadRequest)
-			return
-		}
-	*/
-
 	image.Token = userID
+	
 	//First find in db
 	if err = database.ImageInstance.Where("token = ? AND timestamp = ?", image.Token, image.Timestamp).First(&image).Error; err != nil {
 		// image not found

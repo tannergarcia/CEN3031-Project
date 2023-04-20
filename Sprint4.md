@@ -37,13 +37,11 @@
 
  As a user, I want to see a homepage, so that I know what the website does.
  </details>
- 
 
 ### Work Completed
 
  #### Front-end:
- 
-- TODO Update
+
 - Implemented proxy for frontend requests
 
 - Album now updates when it is switched to be in view
@@ -58,11 +56,11 @@
 
 - Cypress and Unit Tests
 
-
  #### Back-end:
 
-- TODO Update
+
 - Updated API Documentation
+
 
 - Implemented core image message encoding/decoding functionality
 
@@ -234,7 +232,9 @@ form enctype="multipart/form-data"
 </details>
 
 <details>
+
  <summary><code>GET</code> <code><b>/decode/?timestamp={timestamp}</b></code> Decode existing image</summary>
+
 
 #### Parameters
 **Cookie authentication required**
@@ -351,7 +351,10 @@ form enctype="multipart/form-data"
 </details>
 
 <details>
+
  <summary><code>DELETE</code> <code><b>/delete/?timestamp={timestamp}</b></code> Delete an image</summary>
+
+
 
 #### Parameters
 **Cookie authentication required**
@@ -624,6 +627,7 @@ Front-end:
     - The user should be able to input the username and password text boxes.
  
     - User should not be allowed the same username as one in the database.
+
  
  <summary>Code: </summary>
 <details>
@@ -733,6 +737,7 @@ Front-end:
 })
  </code>
   </details>
+
 <summary>ProfileComponent</summary>
  
     - Should bring the user to their profile page.
@@ -740,6 +745,7 @@ Front-end:
     - Should allow user to start a new task.
  
     - Should allow user to logout.
+
  
  <summary>Code: </summary>
 <details>
@@ -822,17 +828,21 @@ Front-end:
 })
 </code>
   </details>
+
 <summary>AuthWebComponent</summary>
  
     - Should authorize users when inputting correct credentials.
  
     - Should deny users with incorrect credentials.
 
+
+
  </details>
   
   
  #### Cypress Tests
  <details>
+
  <summary>1. Makes sure that user can interact with all elements of interface.</summary> 
    -Sets Cookie
   
@@ -856,7 +866,7 @@ Front-end:
   
    -Decodes, Deletes
  
-   
+  
  </details>
 
  <details>
@@ -877,10 +887,12 @@ Using Cypress with the End to End testing.
 describe('PhotoBomb End to End Testing', () => {
   it('Visits the login page', () => {
     //original login
+
     cy.visit('http://localhost:4200');
     cy.contains("PhotoBomb");
     cy.contains("LOGIN");
     cy.url().should('includes', 'signin');
+
 
     //try to login with user info
     cy.get('[id="userText"]').type('testUser1');
@@ -987,6 +999,7 @@ describe('PhotoBomb End to End Testing', () => {
     cy.contains("LOGIN");
     cy.url().should('includes', 'signin');
   })
+
 })
   </code>
 </details>
