@@ -6,13 +6,11 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
-import { JwtInterceptor } from './authweb/jwt.interceptor';
 import { RegisterComponent } from './register/register.component';
 //import { AlertComponent } from './warnings';
 import { MatCardModule } from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldControl, MatFormFieldModule} from '@angular/material/form-field';
-import { WarningsComponent } from './warnings/warnings.component';
 import {MatInputModule} from '@angular/material/input';
 
 //encode decode
@@ -41,7 +39,6 @@ import { ExistDecodeComponent } from './exist-decode/exist-decode.component';
     LoginComponent,
     ProfileComponent,
     RegisterComponent,
-    WarningsComponent,
     UploadComponent,
     DecodeComponent,
     EncodeComponent,
@@ -72,7 +69,6 @@ import { ExistDecodeComponent } from './exist-decode/exist-decode.component';
     MatGridListModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
   entryComponents: [AlbumDecodeComponent, PhotoComponent],

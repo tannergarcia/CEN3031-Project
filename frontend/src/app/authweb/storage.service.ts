@@ -12,12 +12,12 @@ export class StorageService {
     window.sessionStorage.clear();
   }
   
-  public saveUser(user: any): void {
+  public saveUser(user: string | null): void {
     window.sessionStorage.removeItem(USER_KEY);
     window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
-  public getUser(): any {
+  public getUser() {
     const user = window.sessionStorage.getItem(USER_KEY);
     if (user) {
         return JSON.parse(user);

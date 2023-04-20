@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component} from '@angular/core';
-import { Router } from '@angular/router';
+import { Data, Router } from '@angular/router';
 import { OnInit } from '@angular/core';
 
 import { StorageService } from '../authweb/storage.service';
@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit{
   static selectedIndex: number;
   public classRef = ProfileComponent;
   public static text = "New"
-  userData: any;
+  userData: string | null | undefined;
 
   constructor(
     private httpClient: HttpClient,
