@@ -43,7 +43,7 @@
 
  #### Front-end:
  
-- TODO Update
+
 - Implemented proxy for frontend requests
 
 - Album now updates when it is switched to be in view
@@ -61,7 +61,7 @@
 
  #### Back-end:
 
-- TODO Update
+
 - Updated API Documentation
 
 - Implemented core image message encoding/decoding functionality
