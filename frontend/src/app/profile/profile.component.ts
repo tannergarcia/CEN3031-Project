@@ -16,6 +16,8 @@ export class ProfileComponent implements OnInit{
   public classRef = ProfileComponent;
   public static text = "New"
   userData: string | null | undefined;
+  username!: string;
+  hide = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -28,6 +30,8 @@ export class ProfileComponent implements OnInit{
 
   ngOnInit(): void {
     this.userData = this.storageService.getUser();
+    this.username = this.userData!.toString();
+
   }
 
   Change(){
@@ -35,10 +39,12 @@ export class ProfileComponent implements OnInit{
     if (this.classRef.selectedIndex == 0){
       this.classRef.selectedIndex = 1;
       ProfileComponent.text = "Album"
+      this.hide = true;
     }
     else{
       this.classRef.selectedIndex = 0;
       ProfileComponent.text = "New"
+      this.hide = false;
     }
     
   }
