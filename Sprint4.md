@@ -1,3 +1,4 @@
+
 ### All + New User Stories
 <details>
   
@@ -37,6 +38,8 @@
 
  As a user, I want to see a homepage, so that I know what the website does.
  </details>
+ 
+
 
 ### Work Completed
 
@@ -56,15 +59,21 @@
 
 - Cypress and Unit Tests
 
+
+
  #### Back-end:
 
 
 - Updated API Documentation
 
-
 - Implemented core image message encoding/decoding functionality
 
-- Added Additional Unit tests
+- Implemented username/password validation at signup
+
+- Added tests for username/password validation
+
+- Improved image api testing
+
 
 
 
@@ -355,7 +364,6 @@ form enctype="multipart/form-data"
  <summary><code>DELETE</code> <code><b>/delete/?timestamp={timestamp}</b></code> Delete an image</summary>
 
 
-
 #### Parameters
 **Cookie authentication required**
 
@@ -473,6 +481,7 @@ Front-end:
  
     - Both text boxes should begin as empty when the user loads onto the login page.
  
+
  <summary>Code: </summary>
 <details>
  <code>
@@ -612,6 +621,7 @@ Front-end:
  </code>
   </details>
  
+
 <summary>RegisterComponent</summary>
  
     - Should allow user to register
@@ -835,7 +845,22 @@ Front-end:
  
     - Should deny users with incorrect credentials.
 
-
+<summary>WarningsComponent</summary>
+ 
+    - Should clear warnings
+ 
+    - When the user clicks on the remove button, fade the error messages.
+ 
+    - Should be the correct warnings
+ 
+    - Push the correct type of warning for the correct errors.
+ 
+    - Should push warnings
+ 
+    - Push one of the four types of warnings available to the screen.
+ 
+    -Inputs loginUsername and loginPassword
+ 
 
  </details>
   
@@ -866,7 +891,8 @@ Front-end:
   
    -Decodes, Deletes
  
-  
+   
+
  </details>
 
  <details>
@@ -884,6 +910,7 @@ Using Cypress with the End to End testing.
    -Bringing users to their profile page
   
   <code>
+
 describe('PhotoBomb End to End Testing', () => {
   it('Visits the login page', () => {
     //original login
@@ -1020,6 +1047,8 @@ Tested scenarios include:
 - Already taken username for signup
 - Missing username/password
 - Correct requests
+- Invalid username/password for signup (too short/long/invalid characters)
+
 
 </details>
 
