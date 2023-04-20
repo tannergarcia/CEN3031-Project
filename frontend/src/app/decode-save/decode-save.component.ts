@@ -19,6 +19,8 @@ export class DecodeSaveComponent {
   closeAll() {
     this.dialog.close();
     this.service.selectedIndex = 0;
+    this.service.text = "New";
+    this.service.hide = false;
     this.encodeComp.service.hide = true;
     this.encodeComp.service.fileName = '';
     this.encodeComp.service.formData = new FormData;

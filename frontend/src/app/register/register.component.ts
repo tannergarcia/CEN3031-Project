@@ -3,8 +3,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { WarningsService } from '../warnings/warnings.service';
-
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -27,7 +25,6 @@ export class RegisterComponent {
   constructor(
     private httpClient: HttpClient,
     private router: Router,
-    private alertService: WarningsService,
     private formBuilder: FormBuilder
   ){ }
 
@@ -44,13 +41,12 @@ export class RegisterComponent {
 
   register(){
     this.submitted = true;
-    this.alertService.clear_warnings();
     console.log(this.registerUsername, this.registerPassword)
     this.httpClient.post('http://localhost:8080/signup', {
       //username for now
       username: this.registerUsername,
       password: this.registerPassword
-    }).pipe().subscribe((response: any) => {
+    }).pipe().subscribe((response) => {
       if(response){
       }
       //localStorage.setItem('token', response.jwt)

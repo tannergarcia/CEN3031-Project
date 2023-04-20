@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { WarningsService } from '../warnings/warnings.service';
+import { StorageService } from '../authweb/storage.service';
+import { CookieModel } from './cookie.model';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +14,6 @@ import { WarningsService } from '../warnings/warnings.service';
 })
 export class LoginComponent {
   isLogin: boolean = false
-  registerUsername: string | null = null
-  registerPassword: string | null = null
   loginUsername: string | null = null
   loginPassword: string | null = null
 
@@ -27,14 +27,15 @@ export class LoginComponent {
   constructor(
     private httpClient: HttpClient,
     private router: Router,
-    private alertService: WarningsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private storageService: StorageService
   ){ }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
         loginUsername: ['', Validators.required],
         loginPassword: ['', Validators.required]
+        
     });
   } 
 
@@ -42,25 +43,24 @@ export class LoginComponent {
     return this.form.controls; 
   }
 
+  
+
   login(){
     this.submitted = true;
-    this.alertService.clear_warnings();
-    this.httpClient.post('http://localhost:8080/signin', {
+    type cookieData = 'session_token' | 'sessionToken' | 'expiresAt';
+    this.httpClient.post<{session_token: string, sessionToken: string, expiresAt: string}>('http://localhost:8080/signin',  {
       withCredentials: true,  
       username: this.loginUsername,
       password: this.loginPassword
-    }).subscribe((response: any) => {
+    }).subscribe((response: {session_token: string, sessionToken: string, expiresAt: string}) => {
       console.log("login");
-      console.log(response);
-      if(response || 'User Signed In'){
-        
-        //removed, not jwt currently
-        //localStorage.setItem('token', response.jwt)
-        //this.router.navigate(['profile'])
-        
-      }
+      
+      const cookieResponse = response?.session_token + "=" + response?.sessionToken + "; Path=/; Expires=" + response?.expiresAt + ";"
+      console.log(cookieResponse);
 
-        //want to be able to username from database instead
+      document.cookie = cookieResponse;
+      this.storageService.saveUser(this.loginUsername);
+
       this.timer = true;
       this.router.navigate(['profile'])
       this.loginUsername = null
@@ -70,8 +70,6 @@ export class LoginComponent {
     if(this.timer == false){
       this.error = true;
     }
-
-
   }
 
   goToPage(pageName:string){

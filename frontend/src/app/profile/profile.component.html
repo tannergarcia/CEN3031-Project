@@ -13,7 +13,10 @@
     <p>Need to pull username from database.</p>    
 </div>-->
 
-
+<div id="username">
+     <p  [hidden] = 'classRef.hide' style="color:black; font-size: 20px; text-transform: uppercase; margin-left: 10px; font-weight: 500;">{{userData}}'s album
+    </p> 
+ </div>
 <div>
     <mat-tab-group  [backgroundColor]="undefined" headerPosition="below" mat-stretch-tabs="false" mat-align-tabs="start" deactivateInkBar="true" disableRipple="true" disablePagination="true" [(selectedIndex)]=classRef.selectedIndex>
         <mat-tab disabled="true">
